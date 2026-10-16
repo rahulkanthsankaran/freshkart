@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wishlist — AI Personal Shopping Agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="wishlist.html" class="icon-btn" title="Wishlist"><i class="fa fa-heart"></i><span class="badge" id="wishlist-count">0</span></a>
+    <a href="cart.html" class="icon-btn" title="Cart"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link active">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link">📋 Orders</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <h2>❤️ Saved Wishlist Items</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">Track prices, check stock availability, and transfer items straight to your cart.</p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+      <div><span id="wishlist-stats" class="fw-bold" style="color:var(--primary);">0 items saved</span></div>
+      <div style="display:flex; gap:0.5rem;">
+        <button class="btn btn-primary btn-sm" id="move-all-cart-btn">Move All to Cart 🛒</button>
+        <button class="btn btn-outline btn-sm" id="clear-wishlist-btn">Clear Wishlist</button>
+      </div>
+    </div>
+
+    <div class="product-grid" id="wishlist-grid">
+      <!-- Injected by wishlist render -->
+    </div>
+
+    <div id="wishlist-empty-state" class="empty-state" style="display:none;">
+      <div class="empty-icon">💔</div>
+      <h3>Your wishlist is empty</h3>
+      <p>Save items you love by clicking the heart icon on any product card!</p>
+      <a href="products.html" class="btn btn-primary mt-2">Explore Products</a>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script>
+  function renderWishlist() {
+    const wl = JSON.parse(localStorage.getItem('FreshKart-wishlist') || '[]');
+    const grid = document.getElementById('wishlist-grid');
+    const emptyState = document.getElementById('wishlist-empty-state');
+    const stats = document.getElementById('wishlist-stats');
+
+    stats.textContent = `${wl.length} item${wl.length !== 1 ? 's' : ''} saved`;
+
+    if (wl.length === 0) {
+      grid.innerHTML = '';
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    const products = (window.PRODUCTS || []).filter(p => wl.includes(p.id));
+
+    grid.innerHTML = products.map(p => `
+      <article class="product-card" id="wl-${p.id}">
+        <div class="product-img-wrap">
+          <img src="${p.image}" alt="${p.name}" />
+          <button class="wishlist-btn active" onclick="removeWishlistItem('${p.id}')">❤️</button>
+        </div>
+        <div class="product-body">
+          <div class="product-brand">${p.brand} · ${p.category}</div>
+          <div class="product-name">${p.name}</div>
+          <div class="product-meta">
+            <div class="product-pricing">
+              <span class="product-price">₹${p.price.toLocaleString('en-IN')}</span>
+              ${p.originalPrice ? `<del class="original-price">₹${p.originalPrice.toLocaleString('en-IN')}</del>` : ''}
+            </div>
+            <span class="product-discount">${p.discount}% off</span>
+          </div>
+          <div style="font-size:0.75rem; color:var(--success); margin-bottom:0.75rem;">✓ Price drop alert enabled</div>
+          <div class="product-actions">
+            <button class="btn-cart" onclick="moveItemToCart('${p.id}')">🛒 Move to Cart</button>
+            <button class="btn-compare" onclick="removeWishlistItem('${p.id}')" title="Remove">✕</button>
+          </div>
+        </div>
+      </article>
+    `).join('');
+  }
+
+  function removeWishlistItem(id) {
+    let wl = JSON.parse(localStorage.getItem('FreshKart-wishlist') || '[]');
+    wl = wl.filter(i => i !== id);
+    localStorage.setItem('FreshKart-wishlist', JSON.stringify(wl));
+    renderWishlist();
+    window.updateWishlistBadge && updateWishlistBadge();
+    showToast('Removed from wishlist', 'info');
+  }
+
+  function moveItemToCart(id) {
+    const prod = (window.PRODUCTS || []).find(p => p.id === id);
+    if (!prod) return;
+    window.addToCart && addToCart(prod);
+    removeWishlistItem(id);
+  }
+
+  document.getElementById('move-all-cart-btn').addEventListener('click', () => {
+    const wl = JSON.parse(localStorage.getItem('FreshKart-wishlist') || '[]');
+    if (wl.length === 0) {
+      showToast('No items to move!', 'warning');
+      return;
+    }
+    wl.forEach(id => {
+      const prod = (window.PRODUCTS || []).find(p => p.id === id);
+      if (prod) window.addToCart && addToCart(prod);
+    });
+    localStorage.setItem('FreshKart-wishlist', '[]');
+    renderWishlist();
+    window.updateWishlistBadge && updateWishlistBadge();
+    showToast('All items moved to cart 🛒', 'success');
+  });
+
+  document.getElementById('clear-wishlist-btn').addEventListener('click', () => {
+    localStorage.setItem('FreshKart-wishlist', '[]');
+    renderWishlist();
+    window.updateWishlistBadge && updateWishlistBadge();
+    showToast('Wishlist cleared', 'warning');
+  });
+
+  document.addEventListener('DOMContentLoaded', renderWishlist);
+</script>
+</body>
+</html>
+

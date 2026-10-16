@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Operations Center — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">⚙️</div>
+    <div class="logo-text"><h1>FreshKart Master Admin</h1><span>Platform Health, Users &amp; Analytics</span></div>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="index.html" class="btn btn-outline btn-sm">Storefront 🛍️</a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="admin-dashboard.html" class="nav-link active">📊 System Overview</a></li>
+    <li><a href="#users-section" class="nav-link">👥 User Accounts</a></li>
+    <li><a href="#activity-section" class="nav-link">📜 Activity Logs</a></li>
+    <li><a href="seller-dashboard.html" class="nav-link">🏪 Seller Central</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <h2>⚙️ Enterprise Administration Console</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">System metrics, role-based access control, security monitoring, and AI recommendations throughput.</p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+    <!-- Quick Navigation Dock -->
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.75rem;">
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+        <a href="php-module/records.php" class="btn btn-primary btn-sm"><i class="fa fa-database"></i> Live MySQL Records (phpMyAdmin)</a>
+        <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-table-cells"></i> Open phpMyAdmin Table ↗</a>
+        <a href="url-analyzer.html" class="btn btn-outline btn-sm"><i class="fa fa-magnifying-glass"></i> URL &amp; Link Analyzer</a>
+        <a href="seller-dashboard.html" class="btn btn-outline btn-sm"><i class="fa fa-store"></i> Seller Central</a>
+        <a href="index.html" class="btn btn-outline btn-sm"><i class="fa fa-cart-shopping"></i> Main Storefront</a>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span class="tag tag-success"><i class="fa fa-circle-check"></i> System All Healthy</span>
+      </div>
+    </div>
+
+    <!-- Top Bento Grid Metrics -->
+    <div class="stats-grid mb-3">
+      <div class="stat-card" style="background:linear-gradient(135deg, rgba(5,150,105,0.25) 0%, rgba(16,185,129,0.08) 100%); border-color:var(--primary-light);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="stat-icon">💰</div>
+          <span class="tag tag-success" style="font-size:0.72rem;">+18.4% this month</span>
+        </div>
+        <div class="stat-num" style="color:var(--primary-light); font-size:2.2rem; font-weight:800; margin-top:0.4rem;">₹1,24,98,400</div>
+        <div class="stat-label">Gross Merchandise Value (GMV)</div>
+      </div>
+
+      <div class="stat-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="stat-icon">👥</div>
+          <span class="tag tag-primary" style="font-size:0.72rem;"><i class="fa fa-database"></i> MySQL Synced</span>
+        </div>
+        <div class="stat-num" id="admin-user-count" style="color:var(--text-strong); font-size:2.2rem; font-weight:800; margin-top:0.4rem;">4,821</div>
+        <div class="stat-label">Active Registered Users</div>
+      </div>
+
+      <div class="stat-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="stat-icon">⚡</div>
+          <span class="tag tag-info" style="font-size:0.72rem;">Port 3306 / 80</span>
+        </div>
+        <div class="stat-num" style="color:#06b6d4; font-size:2.2rem; font-weight:800; margin-top:0.4rem;">99.98%</div>
+        <div class="stat-label">Platform &amp; MySQL Uptime</div>
+      </div>
+
+      <div class="stat-card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div class="stat-icon">🤖</div>
+          <span class="tag tag-warning" style="font-size:0.72rem;">15-Min Basket Match</span>
+        </div>
+        <div class="stat-num" style="color:#84cc16; font-size:2.2rem; font-weight:800; margin-top:0.4rem;">18,410</div>
+        <div class="stat-label">AI Recipe Queries Handled</div>
+      </div>
+    </div>
+
+    <!-- User Management Table -->
+    <div class="card mb-3" id="users-section">
+      <div class="card-header">
+        <div class="card-title">👥 Registered Users &amp; Permissions</div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <input type="text" id="user-filter" class="form-control" placeholder="Search user..." style="font-size:0.8rem; width:180px;" />
+          <a href="php-module/records.php" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> MySQL Records (phpMyAdmin)</a>
+          <button class="btn btn-primary btn-sm" onclick="showToast('Invited new admin role', 'success')">+ Add User</button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:1.5px solid var(--border); text-align:left; color:var(--text-muted);">
+              <th style="padding:0.75rem 0.5rem;">User</th>
+              <th style="padding:0.75rem 0.5rem;">Role</th>
+              <th style="padding:0.75rem 0.5rem;">Joined</th>
+              <th style="padding:0.75rem 0.5rem;">Orders</th>
+              <th style="padding:0.75rem 0.5rem;">Status</th>
+              <th style="padding:0.75rem 0.5rem;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="admin-user-table">
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.75rem 0.5rem;">
+                <strong>Rahul Sharma</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">rahul@example.com</div>
+              </td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-primary">Customer</span></td>
+              <td style="padding:0.75rem 0.5rem;">02 Oct 2026</td>
+              <td style="padding:0.75rem 0.5rem;">14 orders</td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Active</span></td>
+              <td style="padding:0.75rem 0.5rem;"><button class="btn btn-outline btn-sm">Inspect</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.75rem 0.5rem;">
+                <strong>FreshFarm Agri Organics Ltd.</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">seller@freshfarm.in</div>
+              </td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-info">Verified Seller</span></td>
+              <td style="padding:0.75rem 0.5rem;">15 Sep 2026</td>
+              <td style="padding:0.75rem 0.5rem;">50 grocery listings</td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Active</span></td>
+              <td style="padding:0.75rem 0.5rem;"><button class="btn btn-outline btn-sm">Inspect</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.75rem 0.5rem;">
+                <strong>Ananya Iyer</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">ananya@example.com</div>
+              </td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-primary">Customer</span></td>
+              <td style="padding:0.75rem 0.5rem;">08 Oct 2026</td>
+              <td style="padding:0.75rem 0.5rem;">2 orders</td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Active</span></td>
+              <td style="padding:0.75rem 0.5rem;"><button class="btn btn-outline btn-sm">Inspect</button></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:0.75rem 0.5rem;">
+                <strong>Master Admin</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">admin@FreshKart.com</div>
+              </td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-danger">SuperAdmin</span></td>
+              <td style="padding:0.75rem 0.5rem;">01 Jan 2026</td>
+              <td style="padding:0.75rem 0.5rem;">System Root</td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Active</span></td>
+              <td style="padding:0.75rem 0.5rem;"><button class="btn btn-outline btn-sm">Security</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Live System Activity Stream -->
+    <div class="card" id="activity-section">
+      <h3 class="card-title mb-2">📜 Real-Time Security &amp; Activity Stream</h3>
+      <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.85rem;" id="activity-logs">
+        <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted); font-size:0.75rem;">10:04:12</span>
+          <span class="tag tag-success">AUTH</span>
+          <span>Customer login authenticated via token: <code>customer@FreshKart.com</code></span>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted); font-size:0.75rem;">09:58:34</span>
+          <span class="tag tag-info">AI_QUERY</span>
+          <span>AI Assistant matched 4 fresh vegetable &amp; fruit items for budget constraint <code>&lt;= 250</code></span>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-muted); font-size:0.75rem;">09:45:00</span>
+          <span class="tag tag-primary">ORDER</span>
+          <span>Order <code>ORD-2026-8841</code> transition status changed to <em>Shipped</em></span>
+        </div>
+        <div style="display:flex; gap:1rem; align-items:center; padding:0.5rem 0;">
+          <span style="color:var(--text-muted); font-size:0.75rem;">09:30:19</span>
+          <span class="tag tag-warning">CACHE</span>
+          <span>AJAX product cache refreshed from <code>data/products.json</code></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('user-filter')?.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('#admin-user-table tr').forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+
+  // Fetch live users from MySQL phpMyAdmin records
+  fetch('php-module/records.php?format=json')
+    .then(r => r.json())
+    .then(d => {
+      if (d && d.success && d.records && d.records.length > 0) {
+        const tbody = document.getElementById('admin-user-table');
+        if (tbody) {
+          const liveRows = d.records.map(u => `
+            <tr style="border-bottom:1px solid var(--border); background:rgba(34,197,94,0.04);">
+              <td style="padding:0.75rem 0.5rem;">
+                <strong>${u.full_name}</strong>
+                <div style="font-size:0.75rem; color:var(--text-muted);">${u.email}</div>
+              </td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">MySQL #${u.id}</span></td>
+              <td style="padding:0.75rem 0.5rem;">${u.created_at ? u.created_at.split(' ')[0] : 'Recent'}</td>
+              <td style="padding:0.75rem 0.5rem;">${u.city || '-'}, ${u.state || ''}</td>
+              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Live</span></td>
+              <td style="padding:0.75rem 0.5rem;"><a href="php-module/records.php" class="btn btn-outline btn-sm">Inspect</a></td>
+            </tr>
+          `).join('');
+          tbody.innerHTML = liveRows + tbody.innerHTML;
+        }
+      }
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
+
+

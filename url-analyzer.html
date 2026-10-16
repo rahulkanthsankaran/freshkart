@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FreshKart Web URL & E-Commerce Analyzer — Inspect WHATWG URL anatomy, query parameters, OpenGraph metadata, YouTube embeds, and SEO health." />
+  <title>URL &amp; Product Metadata Analyzer — FreshKart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Specific styles for URL Analyzer Dashboard */
+    .analyzer-hero {
+      background: linear-gradient(135deg, rgba(5,150,105,0.12) 0%, rgba(132,204,22,0.08) 100%);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.25rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .url-input-group {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      background: var(--bg-2);
+      border: 2px solid var(--border-focus);
+      border-radius: var(--radius-pill);
+      padding: 0.4rem 0.5rem 0.4rem 1.25rem;
+      box-shadow: 0 6px 20px rgba(5, 150, 105, 0.15);
+      transition: all var(--transition);
+    }
+    .url-input-group:focus-within {
+      box-shadow: 0 0 0 4px var(--primary-glow);
+      border-color: var(--primary);
+    }
+    .url-input-group input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 1rem;
+      color: var(--text-strong);
+      font-family: inherit;
+    }
+    .sample-chip {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all var(--transition);
+    }
+    .sample-chip:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .anatomy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .anatomy-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.15rem 1.25rem;
+      position: relative;
+      transition: all var(--transition);
+    }
+    .anatomy-card:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+    }
+    .anatomy-card .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .anatomy-card .value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-strong);
+      word-break: break-all;
+      line-height: 1.3;
+    }
+    .tag-tracking {
+      background: rgba(244, 63, 94, 0.15);
+      color: #f43f5e;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .tag-query {
+      background: rgba(132, 204, 22, 0.18);
+      color: var(--secondary);
+      border: 1px solid rgba(132, 204, 22, 0.35);
+    }
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+    }
+    .param-table th, .param-table td {
+      padding: 0.75rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .param-table th {
+      background: var(--bg-3);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+    .og-preview-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-2);
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      align-items: stretch;
+    }
+    @media (max-width: 768px) {
+      .og-preview-card {
+        grid-template-columns: 1fr;
+      }
+    }
+    .score-meter {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) calc(var(--score, 90) * 1%), var(--bg-3) 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0 auto;
+    }
+    .score-meter::after {
+      content: attr(data-score) '%';
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-strong);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text">
+      <h1>FreshKart</h1>
+      <span>URL &amp; E-Commerce Inspector</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <div class="header-actions">
+      <div class="datetime-widget">
+        <i class="fa fa-clock"></i>
+        <span class="time" id="live-time">--:--:--</span>
+        <span class="date" id="live-date"></span>
+      </div>
+      <button class="icon-btn theme-toggle" id="themeToggle" data-tooltip="Toggle Theme" aria-label="Toggle theme">
+        <i class="fa fa-moon" id="theme-icon"></i>
+      </button>
+      <a href="cart.html" class="icon-btn" data-tooltip="Cart" aria-label="Shopping cart">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="badge" id="cart-count">0</span>
+      </a>
+      <a href="index.html" class="btn btn-outline btn-sm"><i class="fa fa-home"></i> Home</a>
+      <a href="php-module/records.php" class="btn btn-primary btn-sm"><i class="fa fa-database"></i> MySQL Records</a>
+    </div>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu"><i class="fa fa-bars"></i></button>
+</header>
+
+<!-- ════════════ NAVIGATION ════════════ -->
+<nav class="site-nav" id="site-nav" role="navigation" aria-label="Main navigation">
+  <ul class="nav-list" role="menubar">
+    <li><a href="index.html" class="nav-link" role="menuitem"><span class="nav-icon">🏠</span> Home</a></li>
+    <li><a href="index.html#dashboard" class="nav-link" role="menuitem"><span class="nav-icon">📊</span> Dashboard</a></li>
+    <li><a href="products.html" class="nav-link" role="menuitem"><span class="nav-icon">🛍️</span> Products</a></li>
+    <li><a href="products.html#categories" class="nav-link" role="menuitem"><span class="nav-icon">📁</span> Categories</a></li>
+    <li><a href="ai-assistant.html" class="nav-link" role="menuitem"><span class="nav-icon">🤖</span> AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link" role="menuitem"><span class="nav-icon">❤️</span> Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link" role="menuitem"><span class="nav-icon">🛒</span> Cart</a></li>
+    <li><a href="compare.html" class="nav-link" role="menuitem"><span class="nav-icon">⚖️</span> Compare</a></li>
+    <li><a href="url-analyzer.html" class="nav-link active" role="menuitem"><span class="nav-icon">🔍</span> URL Analyzer</a></li>
+    <li><a href="seller-dashboard.html" class="nav-link" role="menuitem"><span class="nav-icon">🏪</span> Seller</a></li>
+    <li><a href="admin-dashboard.html" class="nav-link" role="menuitem"><span class="nav-icon">⚙️</span> Admin</a></li>
+    <li><a href="php-module/records.php" class="nav-link" role="menuitem"><span class="nav-icon">📋</span> MySQL Records</a></li>
+    <li><a href="contact.html" class="nav-link" role="menuitem"><span class="nav-icon">📞</span> Contact</a></li>
+  </ul>
+</nav>
+
+<main class="section">
+  <div class="container" style="max-width:1180px;">
+
+    <!-- Hero Title & Input Banner -->
+    <div class="analyzer-hero">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+        <div>
+          <div style="display:flex; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+            <span class="tag tag-primary"><i class="fa fa-network-wired"></i> WHATWG Standard</span>
+            <span class="tag tag-success"><i class="fa fa-bolt"></i> Live cURL Scraper</span>
+            <span class="tag tag-warning"><i class="fa fa-shield-halved"></i> SEO &amp; Security Audit</span>
+          </div>
+          <h2 class="section-title" style="margin-bottom:0.4rem; font-size:1.85rem;">🌐 Web URL &amp; E-Commerce Analyzer</h2>
+          <p style="font-size:0.92rem; color:var(--text-muted); max-width:680px;">
+            Deconstruct any web link, inspect query strings and UTM tracking tokens, preview YouTube media, extract OpenGraph social metadata, and audit URL security health.
+          </p>
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-outline btn-sm" id="btn-use-current" title="Inspect current page URL">
+            <i class="fa fa-location-crosshairs"></i> Current Page
+          </button>
+          <button class="btn btn-outline btn-sm" id="btn-clear-url">
+            <i class="fa fa-eraser"></i> Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Input Bar -->
+      <form id="url-analyzer-form" novalidate>
+        <div class="url-input-group mb-2">
+          <i class="fa fa-link" style="color:var(--primary); font-size:1.1rem;"></i>
+          <input 
+            type="url" 
+            id="input-url" 
+            placeholder="Paste any web URL (e.g. https://youtu.be/evgp6Bo_DTk or e-commerce product link)..." 
+            value="https://youtu.be/evgp6Bo_DTk"
+            required 
+          />
+          <button type="submit" class="btn btn-primary" id="btn-analyze" style="padding:0.65rem 1.4rem;">
+            <i class="fa fa-magnifying-glass"></i> Inspect &amp; Analyze
+          </button>
+        </div>
+      </form>
+
+      <!-- Quick Preset Sample Chips -->
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; margin-top:0.75rem;">
+        <span style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Try Preset Samples:</span>
+        <span class="sample-chip" data-url="https://youtu.be/evgp6Bo_DTk">
+          <i class="fa-brands fa-youtube" style="color:#ef4444;"></i> FreshKart Store Video (YouTube)
+        </span>
+        <span class="sample-chip" data-url="https://www.bigbasket.com/pd/10000203/fresho-tomato-hybrid-1-kg/?ref=freshkart&utm_source=spring_sale&utm_medium=banner&discount=24#nutrition">
+          <i class="fa fa-carrot" style="color:#f97316;"></i> BigBasket Tomato + UTM Tracking
+        </span>
+        <span class="sample-chip" data-url="http://localhost/FreshKart/product-detail.html?id=1&category=vegetables&discount=24#reviews">
+          <i class="fa fa-leaf" style="color:var(--primary);"></i> FreshKart Local Product
+        </span>
+        <span class="sample-chip" data-url="https://store.organicfresh.in:8443/catalog/produce/fruits?filter=organic&max_price=300&sort=asc&utm_campaign=diwali#storage">
+          <i class="fa fa-server" style="color:#06b6d4;"></i> Port 8443 + Query Filter
+        </span>
+      </div>
+    </div>
+
+    <!-- Loading State Indicator -->
+    <div id="analyzer-loading" style="display:none; text-align:center; padding:3rem 1rem;">
+      <div class="spinner" style="margin:0 auto 1.25rem;"></div>
+      <h3 style="color:var(--text-strong); font-size:1.15rem; font-weight:700;">Deconstructing URL &amp; Extracting Metadata...</h3>
+      <p style="color:var(--text-muted); font-size:0.85rem;">Resolving DNS host, headers, OpenGraph social cards, and DOM elements via PHP scraper.</p>
+    </div>
+
+    <!-- Results Container -->
+    <div id="analyzer-results" style="display:block;">
+
+      <!-- Top URL Action Toolbar -->
+      <div class="card mb-3" style="padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem; min-width:280px; flex:1;">
+          <span class="tag tag-success" id="badge-scheme"><i class="fa fa-lock"></i> HTTPS</span>
+          <div style="font-family:monospace; font-size:0.95rem; font-weight:700; color:var(--text-strong); word-break:break-all;" id="display-full-url">
+            https://youtu.be/evgp6Bo_DTk
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" id="btn-copy-url" title="Copy URL to clipboard"><i class="fa fa-copy"></i> Copy</button>
+          <button class="btn btn-outline btn-sm" id="btn-strip-utm" title="Remove tracking tags"><i class="fa fa-shield-virus"></i> Strip UTM Tags</button>
+          <button class="btn btn-outline btn-sm" id="btn-encode-url" title="URL Encode / Decode"><i class="fa fa-code"></i> Encode / Decode</button>
+          <button class="btn btn-outline btn-sm" id="btn-qr-modal" title="Show QR Code"><i class="fa fa-qrcode"></i> QR Code</button>
+          <button class="btn btn-primary btn-sm" id="btn-export-json"><i class="fa fa-download"></i> Export JSON</button>
+        </div>
+      </div>
+
+      <!-- WHATWG URL Anatomy Bento Grid -->
+      <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-strong); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+        <i class="fa fa-layer-group" style="color:var(--primary);"></i> WHATWG URL Anatomy Breakdown
+      </h3>
+
+      <div class="anatomy-grid">
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-shield"></i> Protocol / Scheme</div>
+          <div class="value" id="val-protocol" style="color:var(--primary);">https:</div>
+          <small id="sub-protocol" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">Secure Encrypted</small>
+        </div>
+
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-globe"></i> Hostname &amp; Domain</div>
+          <div class="value" id="val-hostname">youtu.be</div>
+          <small id="sub-domain" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">Domain Level: ccTLD</small>
+        </div>
+
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-ethernet"></i> Port Number</div>
+          <div class="value" id="val-port">443</div>
+          <small id="sub-port" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">Default HTTPS Port</small>
+        </div>
+
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-folder-tree"></i> Pathname</div>
+          <div class="value" id="val-pathname" style="font-size:0.95rem;">/evgp6Bo_DTk</div>
+          <small id="sub-segments" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">1 Path Segment</small>
+        </div>
+
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-sliders"></i> Query Parameters</div>
+          <div class="value" id="val-params-count">0 Params</div>
+          <small id="sub-query" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">Empty Query String</small>
+        </div>
+
+        <div class="anatomy-card">
+          <div class="label"><i class="fa fa-hashtag"></i> Fragment / Hash</div>
+          <div class="value" id="val-hash">None</div>
+          <small id="sub-hash" style="color:var(--text-muted); font-size:0.75rem; margin-top:0.3rem; display:block;">No in-page anchor</small>
+        </div>
+      </div>
+
+      <!-- YouTube Special Spotlight (Auto-triggers for YouTube URLs) -->
+      <div id="youtube-spotlight-box" class="card mb-3" style="border:2px solid var(--primary); background:linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(5,150,105,0.06) 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+          <div style="display:flex; align-items:center; gap:0.6rem;">
+            <span style="font-size:1.6rem; color:#ef4444;"><i class="fa-brands fa-youtube"></i></span>
+            <div>
+              <h3 style="font-size:1.15rem; font-weight:800; color:var(--text-strong); margin:0;">YouTube Media Detected</h3>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Extracted Video ID: <strong id="yt-video-id" style="color:var(--primary);">evgp6Bo_DTk</strong></span>
+            </div>
+          </div>
+          <span class="tag tag-danger"><i class="fa fa-play"></i> Embedded Player Ready</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.5rem; align-items:center;" class="video-section-grid">
+          <div style="position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1.5px solid var(--border); box-shadow:0 8px 24px rgba(0,0,0,0.3); background:#000;">
+            <iframe 
+              id="yt-embed-iframe"
+              src="https://www.youtube.com/embed/evgp6Bo_DTk" 
+              title="YouTube Preview" 
+              style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div>
+            <div style="font-size:0.85rem; line-height:1.6; margin-bottom:1rem;">
+              <div style="margin-bottom:0.4rem;"><strong>Canonical URL:</strong> <a href="https://www.youtube.com/watch?v=evgp6Bo_DTk" id="yt-canonical-link" target="_blank" style="color:var(--primary); font-family:monospace;">https://www.youtube.com/watch?v=evgp6Bo_DTk</a></div>
+              <div style="margin-bottom:0.4rem;"><strong>Embed Code:</strong> <code id="yt-embed-code" style="background:var(--bg-3); padding:0.2rem 0.4rem; border-radius:4px; font-size:0.75rem; word-break:break-all;">&lt;iframe src="https://www.youtube.com/embed/evgp6Bo_DTk"...&gt;</code></div>
+              <div style="margin-bottom:0.4rem;"><strong>Thumbnail Image:</strong> <a id="yt-thumb-link" target="_blank" style="color:var(--primary);">Open MaxRes JPG</a></div>
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button class="btn btn-outline btn-sm" id="btn-copy-embed"><i class="fa fa-code"></i> Copy Embed Tag</button>
+              <a href="https://youtu.be/evgp6Bo_DTk" id="yt-watch-btn" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm"><i class="fa fa-arrow-up-right-from-square"></i> Open on YouTube</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dual Grid: Query Parameters Inspector & Security Health Audit -->
+      <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:1.5rem; margin-bottom:1.5rem;" class="analyzer-dual-grid">
+        
+        <!-- Query Parameter Inspector -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <i class="fa fa-table-list" style="color:var(--primary);"></i>
+              <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-strong); margin:0;">Query String Parameters</h3>
+              <span class="badge" id="query-badge-count">0</span>
+            </div>
+            <button class="btn btn-outline btn-sm" id="btn-add-param"><i class="fa fa-plus"></i> Add Param</button>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="param-table" id="query-params-table">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Value</th>
+                  <th>Classification</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="query-params-body">
+                <tr>
+                  <td colspan="4" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No query parameters found in this URL.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Security & SEO Audit Card -->
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1.25rem;">
+            <i class="fa fa-shield-heart" style="color:var(--primary);"></i>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-strong); margin:0;">URL Health &amp; Security Score</h3>
+          </div>
+
+          <div style="text-align:center; margin-bottom:1.25rem;">
+            <div class="score-meter" id="health-score-meter" data-score="95" style="--score:95;"></div>
+            <div style="font-size:0.85rem; font-weight:700; color:var(--text-strong); margin-top:0.6rem;" id="health-score-status">Healthy &amp; Secure Link</div>
+          </div>
+
+          <ul style="list-style:none; padding:0; margin:0; font-size:0.84rem; display:flex; flex-direction:column; gap:0.6rem;">
+            <li style="display:flex; justify-content:space-between; align-items:center;" id="audit-https">
+              <span><i class="fa fa-circle-check text-success"></i> Protocol Security:</span>
+              <strong style="color:var(--success);">TLS / HTTPS (Secure)</strong>
+            </li>
+            <li style="display:flex; justify-content:space-between; align-items:center;" id="audit-length">
+              <span><i class="fa fa-circle-check text-success"></i> URL Length:</span>
+              <strong id="audit-char-count">28 chars (Optimal &lt; 75)</strong>
+            </li>
+            <li style="display:flex; justify-content:space-between; align-items:center;" id="audit-tracking">
+              <span><i class="fa fa-circle-info text-primary"></i> Tracking Tags:</span>
+              <strong id="audit-tracking-count">None Detected</strong>
+            </li>
+            <li style="display:flex; justify-content:space-between; align-items:center;" id="audit-ip">
+              <span><i class="fa fa-circle-check text-success"></i> Host Type:</span>
+              <strong id="audit-host-type">Standard Domain Name</strong>
+            </li>
+            <li style="display:flex; justify-content:space-between; align-items:center;" id="audit-status">
+              <span><i class="fa fa-bolt text-warning"></i> HTTP Response:</span>
+              <strong id="audit-http-code">200 OK (0.935s)</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- OpenGraph Social Preview & E-Commerce Metadata -->
+      <div class="card mb-3">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.5rem;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <i class="fa fa-bullhorn" style="color:var(--primary);"></i>
+            <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-strong); margin:0;">Social OpenGraph &amp; E-Commerce Preview</h3>
+          </div>
+          <span class="tag tag-primary" id="meta-site-tag">YouTube</span>
+        </div>
+
+        <div class="og-preview-card mb-3">
+          <div style="background:#0b2019; position:relative; min-height:160px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img 
+              id="og-preview-image" 
+              src="https://img.youtube.com/vi/evgp6Bo_DTk/hqdefault.jpg" 
+              alt="Social Preview" 
+              style="width:100%; height:100%; object-fit:cover;"
+              onerror="this.src='https://picsum.photos/seed/groceries/400/250'" 
+            />
+          </div>
+          <div style="padding:1.25rem 1.5rem; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.75rem; text-transform:uppercase; color:var(--secondary); font-weight:800; letter-spacing:0.06em; margin-bottom:0.25rem;" id="og-preview-domain">
+              YOUTUBE.COM
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:800; color:var(--text-strong); margin-bottom:0.5rem; line-height:1.35;" id="og-preview-title">
+              Colorful healthy mixed fruit food rotating | Free Stock Footage | Free Videos Download
+            </h4>
+            <p style="font-size:0.84rem; color:var(--text-muted); line-height:1.55; margin-bottom:0.75rem;" id="og-preview-desc">
+              Welcome to Free Stock Videos By Dheeraj Sahu! Get high-quality, royalty-free stock videos for YouTube, social media, business presentations, and creative projects.
+            </p>
+            <div style="display:flex; gap:0.75rem; align-items:center; font-size:0.82rem;">
+              <span id="og-preview-price" style="font-weight:800; color:var(--success); font-size:0.95rem;"></span>
+              <span style="color:var(--text-muted);" id="og-preview-canonical">https://youtu.be/evgp6Bo_DTk</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOM Extraction Tabs (Images, Hyperlinks, Headings) -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-meta-images"><i class="fa fa-image"></i> Extracted Images (<span id="count-tab-images">0</span>)</button>
+          <button class="tab-btn" data-tab="tab-meta-links"><i class="fa fa-link"></i> Discovered Links (<span id="count-tab-links">0</span>)</button>
+          <button class="tab-btn" data-tab="tab-meta-headings"><i class="fa fa-heading"></i> Heading Hierarchy (<span id="count-tab-headings">0</span>)</button>
+          <button class="tab-btn" data-tab="tab-meta-raw"><i class="fa fa-code"></i> Raw JSON Response</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-meta-images">
+          <div id="grid-meta-images" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:1rem; max-height:360px; overflow-y:auto; padding-top:0.5rem;">
+            <p style="color:var(--text-muted); font-size:0.85rem;">No inline images found or page is a single video stream.</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-meta-links">
+          <div id="list-meta-links" style="max-height:300px; overflow-y:auto; font-size:0.85rem; padding-top:0.5rem;">
+            <!-- Links injected -->
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-meta-headings">
+          <div id="list-meta-headings" style="max-height:300px; overflow-y:auto; font-size:0.85rem; padding-top:0.5rem;">
+            <!-- Headings injected -->
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-meta-raw">
+          <pre id="json-raw-view" style="background:var(--bg-3); border:1px solid var(--border); border-radius:8px; padding:1rem; font-family:monospace; font-size:0.78rem; max-height:350px; overflow:auto; color:var(--text);"></pre>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<!-- QR Code Modal Dialog -->
+<div id="qr-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:9999; align-items:center; justify-content:center; padding:1.5rem;">
+  <div class="card" style="max-width:380px; width:100%; text-align:center; padding:2rem 1.5rem; position:relative;">
+    <button id="btn-close-qr" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.25rem; color:var(--text-muted); cursor:pointer;">&times;</button>
+    <h3 style="font-size:1.2rem; font-weight:800; color:var(--text-strong); margin-bottom:0.5rem;">Scan URL QR Code</h3>
+    <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1.25rem; word-break:break-all;" id="qr-modal-url"></p>
+    <div style="background:#fff; padding:1rem; border-radius:12px; display:inline-block; margin-bottom:1rem; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+      <img id="qr-modal-img" src="" alt="QR Code" style="width:180px; height:180px; display:block;" />
+    </div>
+    <div>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('qr-modal').style.display='none'">Close Window</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  let currentAnalysis = null;
+  let activeUrlObject = null;
+
+  // DOM Elements
+  const inputUrl = document.getElementById('input-url');
+  const form = document.getElementById('url-analyzer-form');
+  const loader = document.getElementById('analyzer-loading');
+  const results = document.getElementById('analyzer-results');
+
+  // Initial analyze on page load (support ?url=... query param)
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const queryUrl = params.get('url');
+    if (queryUrl) {
+      inputUrl.value = decodeURIComponent(queryUrl);
+    }
+    analyzeUrl(inputUrl.value.trim());
+  });
+
+  // Preset chips click
+  document.querySelectorAll('.sample-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const url = chip.dataset.url;
+      inputUrl.value = url;
+      analyzeUrl(url);
+    });
+  });
+
+  // Current page button
+  document.getElementById('btn-use-current').addEventListener('click', () => {
+    inputUrl.value = window.location.href;
+    analyzeUrl(window.location.href);
+  });
+
+  // Clear URL button
+  document.getElementById('btn-clear-url').addEventListener('click', () => {
+    inputUrl.value = '';
+    inputUrl.focus();
+  });
+
+  // Form submit
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const url = inputUrl.value.trim();
+    if (!url) {
+      showToast('Please enter a web URL to analyze', 'error');
+      return;
+    }
+    analyzeUrl(url);
+  });
+
+  // Main analyze runner
+  async function analyzeUrl(rawUrl) {
+    if (!rawUrl) return;
+
+    // Normalize protocol
+    if (!/^https?:\/\//i.test(rawUrl)) {
+      rawUrl = 'https://' + rawUrl;
+      inputUrl.value = rawUrl;
+    }
+
+    loader.style.display = 'block';
+    results.style.opacity = '0.35';
+
+    let parsedUrl;
+    try {
+      parsedUrl = new URL(rawUrl);
+      activeUrlObject = parsedUrl;
+    } catch (err) {
+      loader.style.display = 'none';
+      results.style.opacity = '1';
+      showToast('Invalid URL syntax: ' + err.message, 'error');
+      return;
+    }
+
+    // Attempt live server-side analysis via PHP backend
+    let backendData = null;
+    try {
+      const res = await fetch(`php-module/analyze-url.php?url=${encodeURIComponent(rawUrl)}`);
+      if (res.ok) {
+        backendData = await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend analyze-url.php failed or offline, using client-side WHATWG fallback.', e);
+    }
+
+    loader.style.display = 'none';
+    results.style.opacity = '1';
+    results.style.display = 'block';
+
+    renderAnalysis(parsedUrl, backendData);
+    showToast('URL analysis completed!', 'success');
+  }
+
+  // Render analysis onto DOM
+  function renderAnalysis(u, backend) {
+    currentAnalysis = { url: u.href, parsed: u, backend: backend };
+
+    // Display Header URL
+    document.getElementById('display-full-url').textContent = u.href;
+    const isHttps = u.protocol === 'https:';
+    const badgeScheme = document.getElementById('badge-scheme');
+    badgeScheme.className = isHttps ? 'tag tag-success' : 'tag tag-danger';
+    badgeScheme.innerHTML = isHttps ? '<i class="fa fa-lock"></i> HTTPS (Secure)' : '<i class="fa fa-lock-open"></i> HTTP (Insecure)';
+
+    // WHATWG Anatomy Cards
+    document.getElementById('val-protocol').textContent = u.protocol;
+    document.getElementById('sub-protocol').textContent = isHttps ? 'Secure TLS / Encrypted' : 'Plaintext / Insecure';
+
+    document.getElementById('val-hostname').textContent = u.hostname;
+    document.getElementById('sub-domain').textContent = getDomainClassification(u.hostname);
+
+    const port = u.port || (isHttps ? '443' : '80');
+    document.getElementById('val-port').textContent = port;
+    document.getElementById('sub-port').textContent = u.port ? 'Explicit Custom Port' : (isHttps ? 'Default HTTPS (443)' : 'Default HTTP (80)');
+
+    document.getElementById('val-pathname').textContent = u.pathname || '/';
+    const segs = u.pathname.split('/').filter(Boolean);
+    document.getElementById('sub-segments').textContent = segs.length ? `${segs.length} Segments [${segs.join(' › ')}]` : 'Root Path';
+
+    // Query parameters
+    const params = Array.from(u.searchParams.entries());
+    document.getElementById('val-params-count').textContent = `${params.length} Param${params.length === 1 ? '' : 's'}`;
+    document.getElementById('sub-query').textContent = u.search ? (u.search.length + ' chars query string') : 'Empty Query String';
+    document.getElementById('query-badge-count').textContent = params.length;
+
+    // Fragment
+    document.getElementById('val-hash').textContent = u.hash || 'None';
+    document.getElementById('sub-hash').textContent = u.hash ? `In-page Anchor (#${u.hash.replace('#','')})` : 'No in-page fragment';
+
+    // Render Query Parameters Table
+    renderParamsTable(params);
+
+    // YouTube Detection
+    handleYouTubeInspection(u, backend);
+
+    // Security & Health Audit
+    renderHealthAudit(u, params, backend);
+
+    // OpenGraph & Metadata
+    renderOpenGraph(u, backend);
+
+    // Raw JSON view
+    document.getElementById('json-raw-view').textContent = JSON.stringify(backend || {
+      url: u.href,
+      protocol: u.protocol,
+      host: u.host,
+      pathname: u.pathname,
+      search: u.search,
+      hash: u.hash,
+      params: Object.fromEntries(params)
+    }, null, 2);
+  }
+
+  // Domain classification helper
+  function getDomainClassification(host) {
+    if (host === 'localhost' || host === '127.0.0.1') return 'Local Development Host';
+    if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) return 'Raw IPv4 Address';
+    if (host.endsWith('.edu') || host.endsWith('.ac.in')) return 'Academic / University Domain';
+    if (host.endsWith('.gov') || host.endsWith('.gov.in')) return 'Government Domain';
+    if (host.endsWith('.org')) return 'Organization Domain';
+    return 'Public Domain Name';
+  }
+
+  // Render Parameters Table
+  function renderParamsTable(params) {
+    const tbody = document.getElementById('query-params-body');
+    if (!params.length) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:1.5rem;">No query parameters in this URL. Click "+ Add Param" to inject one.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = params.map(([k, v], idx) => {
+      const isTracking = /^(utm_|fbclid|gclid|ref|source|campaign)/i.test(k);
+      const isId = /^(id|v|pid|item|pd)/i.test(k);
+      const tagClass = isTracking ? 'tag-tracking' : (isId ? 'tag-primary' : 'tag-query');
+      const tagLabel = isTracking ? 'Tracking / Ads' : (isId ? 'Entity / Video ID' : 'Query / Filter');
+
+      return `
+        <tr>
+          <td><strong style="color:var(--text-strong); font-family:monospace;">${escapeHtml(k)}</strong></td>
+          <td><span style="font-family:monospace; color:var(--primary); word-break:break-all;">${escapeHtml(v)}</span></td>
+          <td><span class="tag ${tagClass}">${tagLabel}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="removeParam('${escapeHtml(k)}')">
+              <i class="fa fa-trash text-danger"></i> Remove
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Remove param and re-analyze
+  window.removeParam = function(key) {
+    if (!activeUrlObject) return;
+    activeUrlObject.searchParams.delete(key);
+    inputUrl.value = activeUrlObject.href;
+    analyzeUrl(activeUrlObject.href);
+    showToast(`Removed parameter: ${key}`, 'success');
+  };
+
+  // Add param button
+  document.getElementById('btn-add-param').addEventListener('click', () => {
+    const key = prompt('Enter new parameter Key (e.g. discount, category, ref):');
+    if (!key) return;
+    const val = prompt(`Enter value for "${key}":`) || '';
+    activeUrlObject.searchParams.set(key.trim(), val.trim());
+    inputUrl.value = activeUrlObject.href;
+    analyzeUrl(activeUrlObject.href);
+    showToast(`Added query parameter: ${key}=${val}`, 'success');
+  });
+
+  // Strip UTM / Tracking tags
+  document.getElementById('btn-strip-utm').addEventListener('click', () => {
+    if (!activeUrlObject) return;
+    const trackingKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid', 'msclkid', 'ref'];
+    let removed = 0;
+    trackingKeys.forEach(k => {
+      if (activeUrlObject.searchParams.has(k)) {
+        activeUrlObject.searchParams.delete(k);
+        removed++;
+      }
+    });
+
+    inputUrl.value = activeUrlObject.href;
+    analyzeUrl(activeUrlObject.href);
+    showToast(removed > 0 ? `Cleaned ${removed} tracking parameter(s)!` : 'No tracking parameters found.', 'success');
+  });
+
+  // YouTube Special Handler
+  function handleYouTubeInspection(u, backend) {
+    const box = document.getElementById('youtube-spotlight-box');
+    let ytId = '';
+
+    if (backend && backend.is_youtube && backend.youtube_id) {
+      ytId = backend.youtube_id;
+    } else if (u.hostname.includes('youtu.be')) {
+      ytId = u.pathname.replace(/^\//, '').split('/')[0];
+    } else if (u.hostname.includes('youtube.com')) {
+      ytId = u.searchParams.get('v') || '';
+      if (!ytId && u.pathname.includes('/embed/')) {
+        ytId = u.pathname.split('/embed/')[1];
+      }
+    }
+
+    if (ytId) {
+      box.style.display = 'block';
+      document.getElementById('yt-video-id').textContent = ytId;
+      document.getElementById('yt-embed-iframe').src = `https://www.youtube.com/embed/${ytId}`;
+      document.getElementById('yt-canonical-link').href = `https://www.youtube.com/watch?v=${ytId}`;
+      document.getElementById('yt-canonical-link').textContent = `https://www.youtube.com/watch?v=${ytId}`;
+      document.getElementById('yt-embed-code').textContent = `<iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>`;
+      document.getElementById('yt-thumb-link').href = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+      document.getElementById('yt-watch-btn').href = `https://youtu.be/${ytId}`;
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  // Copy Embed Code
+  document.getElementById('btn-copy-embed').addEventListener('click', () => {
+    const code = document.getElementById('yt-embed-code').textContent;
+    navigator.clipboard.writeText(code).then(() => showToast('Copied YouTube iframe embed code!', 'success'));
+  });
+
+  // Health and Security Audit
+  function renderHealthAudit(u, params, backend) {
+    let score = 100;
+    const isHttps = u.protocol === 'https:';
+    if (!isHttps) score -= 30;
+
+    const urlLen = u.href.length;
+    if (urlLen > 150) score -= 15;
+    else if (urlLen > 80) score -= 5;
+
+    const trackingCount = params.filter(([k]) => /^(utm_|fbclid|gclid)/i.test(k)).length;
+    if (trackingCount > 0) score -= Math.min(15, trackingCount * 5);
+
+    const isIp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(u.hostname);
+    if (isIp && u.hostname !== '127.0.0.1') score -= 20;
+
+    score = Math.max(25, score);
+
+    const meter = document.getElementById('health-score-meter');
+    meter.setAttribute('data-score', score);
+    meter.style.setProperty('--score', score);
+
+    const statusEl = document.getElementById('health-score-status');
+    if (score >= 85) {
+      statusEl.textContent = 'Excellent & Secure Web Link';
+      statusEl.style.color = 'var(--success)';
+    } else if (score >= 60) {
+      statusEl.textContent = 'Acceptable (Review Tracking / Length)';
+      statusEl.style.color = 'var(--warning)';
+    } else {
+      statusEl.textContent = 'Security Concerns (Insecure or Raw IP)';
+      statusEl.style.color = 'var(--danger)';
+    }
+
+    // Details
+    document.getElementById('audit-char-count').textContent = `${urlLen} chars (${urlLen < 75 ? 'Optimal' : (urlLen < 120 ? 'Moderate' : 'Long')})`;
+    document.getElementById('audit-tracking-count').textContent = trackingCount > 0 ? `${trackingCount} tracking tag(s)` : 'None Detected';
+    document.getElementById('audit-host-type').textContent = getDomainClassification(u.hostname);
+
+    const httpCode = backend ? `${backend.status_code} (${backend.metadata?.total_time || '0.1s'})` : '200 OK (Client verified)';
+    document.getElementById('audit-http-code').textContent = httpCode;
+  }
+
+  // Render OpenGraph & Scraped Info
+  function renderOpenGraph(u, backend) {
+    const meta = backend?.metadata || {};
+    
+    document.getElementById('meta-site-tag').textContent = meta.og_site_name || u.hostname;
+    document.getElementById('og-preview-domain').textContent = u.hostname.toUpperCase();
+    document.getElementById('og-preview-title').textContent = meta.title || meta.og_title || (u.hostname + ' Webpage');
+    document.getElementById('og-preview-desc').textContent = meta.description || meta.og_desc || 'OpenGraph and structured schema tags extracted from the webpage headers and DOM tree.';
+    document.getElementById('og-preview-canonical').textContent = meta.canonical || u.href;
+
+    if (meta.price) {
+      document.getElementById('og-preview-price').textContent = 'Price: ' + meta.price;
+    } else {
+      document.getElementById('og-preview-price').textContent = '';
+    }
+
+    // Image
+    const imgEl = document.getElementById('og-preview-image');
+    if (meta.og_image) {
+      imgEl.src = meta.og_image;
+    } else if (u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')) {
+      const vid = backend?.youtube_id || u.pathname.replace(/^\//,'');
+      imgEl.src = `https://img.youtube.com/vi/${vid}/hqdefault.jpg`;
+    } else {
+      imgEl.src = 'https://picsum.photos/seed/' + encodeURIComponent(u.hostname) + '/400/250';
+    }
+
+    // Extracted DOM Tabs
+    const images = backend?.images || [];
+    document.getElementById('count-tab-images').textContent = images.length;
+    const imgGrid = document.getElementById('grid-meta-images');
+    if (images.length) {
+      imgGrid.innerHTML = images.map(im => `
+        <div style="border:1.5px solid var(--border); border-radius:8px; overflow:hidden; background:var(--bg-3);">
+          <img src="${im.src}" alt="${escapeHtml(im.alt)}" style="width:100%; height:110px; object-fit:cover;" onerror="this.src='https://picsum.photos/seed/thumb/200/150'" />
+          <div style="padding:0.4rem; font-size:0.7rem; color:var(--text-muted); word-break:break-all;">${escapeHtml(im.alt || im.src.split('/').pop())}</div>
+        </div>
+      `).join('');
+    } else {
+      imgGrid.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding:1rem 0;">No media images found directly in the root DOM.</p>`;
+    }
+
+    const links = backend?.links || [];
+    document.getElementById('count-tab-links').textContent = links.length;
+    const linkList = document.getElementById('list-meta-links');
+    if (links.length) {
+      linkList.innerHTML = links.map(l => `
+        <div style="padding:0.45rem 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+          <span style="color:var(--text-strong); font-weight:600;">${escapeHtml(l.text)}</span>
+          <a href="${escapeHtml(l.href)}" target="_blank" style="color:var(--primary); font-family:monospace; font-size:0.78rem;">${escapeHtml(l.href)}</a>
+        </div>
+      `).join('');
+    } else {
+      linkList.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding:1rem 0;">No external links extracted.</p>`;
+    }
+
+    const headings = backend?.headings || [];
+    document.getElementById('count-tab-headings').textContent = headings.length;
+    const headList = document.getElementById('list-meta-headings');
+    if (headings.length) {
+      headList.innerHTML = headings.map(h => `
+        <div style="padding:0.45rem 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.6rem;">
+          <span class="tag tag-primary" style="font-size:0.7rem; padding:0.15rem 0.45rem;">${h.tag}</span>
+          <span style="color:var(--text-strong); font-weight:600;">${escapeHtml(h.text)}</span>
+        </div>
+      `).join('');
+    } else {
+      headList.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; padding:1rem 0;">No H1-H3 content headings discovered.</p>`;
+    }
+  }
+
+  // Toolbar Actions
+  document.getElementById('btn-copy-url').addEventListener('click', () => {
+    if (!activeUrlObject) return;
+    navigator.clipboard.writeText(activeUrlObject.href).then(() => showToast('Copied full URL to clipboard!', 'success'));
+  });
+
+  // URL Encode / Decode Toggle
+  let isEncoded = false;
+  document.getElementById('btn-encode-url').addEventListener('click', () => {
+    if (!activeUrlObject) return;
+    if (!isEncoded) {
+      inputUrl.value = encodeURIComponent(activeUrlObject.href);
+      showToast('URL Encoded', 'info');
+      isEncoded = true;
+    } else {
+      inputUrl.value = decodeURIComponent(inputUrl.value);
+      showToast('URL Decoded', 'info');
+      isEncoded = false;
+    }
+  });
+
+  // QR Code Modal
+  document.getElementById('btn-qr-modal').addEventListener('click', () => {
+    if (!activeUrlObject) return;
+    const url = activeUrlObject.href;
+    document.getElementById('qr-modal-url').textContent = url;
+    document.getElementById('qr-modal-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+    document.getElementById('qr-modal').style.display = 'flex';
+  });
+
+  document.getElementById('btn-close-qr').addEventListener('click', () => {
+    document.getElementById('qr-modal').style.display = 'none';
+  });
+
+  // Export JSON Report
+  document.getElementById('btn-export-json').addEventListener('click', () => {
+    if (!currentAnalysis) return;
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentAnalysis, null, 2));
+    const dl = document.createElement('a');
+    dl.setAttribute("href", dataStr);
+    dl.setAttribute("download", `url_analysis_${Date.now()}.json`);
+    dl.click();
+    showToast('Downloaded analysis JSON report!', 'success');
+  });
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    return text.toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+</script>
+</body>
+</html>

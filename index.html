@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Personal Shopping Agent — Intelligent e-commerce and shopping assistance platform." />
+  <meta name="keywords" content="AI shopping, e-commerce, product recommendations, personal shopping assistant" />
+  <meta property="og:title" content="AI Personal Shopping Agent" />
+  <meta property="og:description" content="Intelligent shopping platform powered by AI recommendations." />
+  <title>AI Personal Shopping Agent — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text">
+      <h1>FreshKart</h1>
+      <span>Your Intelligent Shopping Agent</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <div class="header-actions">
+      <div class="datetime-widget">
+        <i class="fa fa-clock"></i>
+        <span class="time" id="live-time">--:--:--</span>
+        <span class="date" id="live-date"></span>
+      </div>
+      <button class="icon-btn theme-toggle" id="themeToggle" data-tooltip="Toggle Theme" aria-label="Toggle theme">
+        <i class="fa fa-moon" id="theme-icon"></i>
+      </button>
+      <button class="icon-btn" id="notifBtn" data-tooltip="Notifications" aria-label="Notifications">
+        <i class="fa fa-bell"></i>
+        <span class="badge" id="notif-count">5</span>
+      </button>
+      <a href="cart.html" class="icon-btn" data-tooltip="Cart" aria-label="Shopping cart">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="badge" id="cart-count">0</span>
+      </a>
+      <a href="login.html" class="btn btn-primary btn-sm">Login</a>
+    </div>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu"><i class="fa fa-bars"></i></button>
+</header>
+
+<!-- Notification Panel -->
+<div class="notification-panel" id="notifPanel" role="dialog" aria-label="Notifications">
+  <div class="notif-header">
+    <strong>Notifications</strong>
+    <button style="background:none;font-size:0.8rem;color:var(--primary);" id="markAllRead">Mark all read</button>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-icon">🥦</div>
+    <div class="notif-body"><strong>Flash Sale! 35% off on Fresh Veggies &amp; Fruits</strong><span>2 minutes ago</span></div>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-icon">📦</div>
+    <div class="notif-body"><strong>Your order #ORD-4521 shipped</strong><span>1 hour ago</span></div>
+  </div>
+  <div class="notif-item unread">
+    <div class="notif-icon">💡</div>
+    <div class="notif-body"><strong>AI found 3 new recommendations</strong><span>3 hours ago</span></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-icon">❤️</div>
+    <div class="notif-body"><strong>Wishlist item price dropped ₹2,000</strong><span>Yesterday</span></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-icon">⭐</div>
+    <div class="notif-body"><strong>Review your recent purchase</strong><span>2 days ago</span></div>
+  </div>
+</div>
+
+<!-- ════════════ NAVIGATION ════════════ -->
+<nav class="site-nav" id="site-nav" role="navigation" aria-label="Main navigation">
+  <ul class="nav-list" role="menubar">
+    <li><a href="index.html" class="nav-link active" role="menuitem"><span class="nav-icon">🏠</span> Home</a></li>
+    <li><a href="index.html#dashboard" class="nav-link" role="menuitem"><span class="nav-icon">📊</span> Dashboard</a></li>
+    <li><a href="products.html" class="nav-link" role="menuitem"><span class="nav-icon">🛍️</span> Products</a></li>
+    <li><a href="products.html#categories" class="nav-link" role="menuitem"><span class="nav-icon">📁</span> Categories</a></li>
+    <li><a href="ai-assistant.html" class="nav-link" role="menuitem"><span class="nav-icon">🤖</span> AI Assistant</a></li>
+    <li><a href="products.html#recommendations" class="nav-link" role="menuitem"><span class="nav-icon">✨</span> Recommendations</a></li>
+    <li><a href="wishlist.html" class="nav-link" role="menuitem"><span class="nav-icon">❤️</span> Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link" role="menuitem"><span class="nav-icon">🛒</span> Cart</a></li>
+    <li><a href="orders.html" class="nav-link" role="menuitem"><span class="nav-icon">📋</span> Orders</a></li>
+    <li><a href="compare.html" class="nav-link" role="menuitem"><span class="nav-icon">⚖️</span> Compare</a></li>
+    <li><a href="url-analyzer.html" class="nav-link" role="menuitem"><span class="nav-icon">🔍</span> URL Analyzer</a></li>
+    <li><a href="seller-dashboard.html" class="nav-link" role="menuitem"><span class="nav-icon">🏪</span> Seller</a></li>
+    <li><a href="admin-dashboard.html" class="nav-link" role="menuitem"><span class="nav-icon">⚙️</span> Admin</a></li>
+    <li><a href="php-module/records.php" class="nav-link" role="menuitem"><span class="nav-icon">📋</span> MySQL Records</a></li>
+    <li><a href="contact.html" class="nav-link" role="menuitem"><span class="nav-icon">📞</span> Contact</a></li>
+  </ul>
+</nav>
+
+<main id="main-content">
+
+<!-- ════════════ HERO SLIDER ════════════ -->
+<section class="hero-slider" aria-label="Featured promotions">
+  <div class="slide active slide-1">
+    <div class="hero-absolute-badge">⚡ 15-Min Express Delivery</div>
+    <div style="display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:1rem;">
+      <span class="tag tag-primary"><i class="fa fa-leaf"></i> 100% Organic Certified</span>
+      <span class="tag tag-success"><i class="fa fa-clock"></i> Harvested at 5 AM Today</span>
+      <span class="tag tag-warning"><i class="fa fa-star"></i> 4.9★ Top Rated Supermarket</span>
+    </div>
+    <h2 class="gradient-text">Farm Fresh Groceries at Your Doorstep</h2>
+    <p>Handpicked crispy veggies, sun-ripened fruits &amp; daily dairy delivered straight from local farmers in minutes.</p>
+    <div class="flex gap-1" style="flex-wrap:wrap; justify-content:center;">
+      <a href="products.html" class="btn btn-primary btn-lg"><i class="fa fa-cart-shopping"></i> Shop Fresh Groceries</a>
+      <a href="ai-assistant.html" class="btn btn-outline btn-lg"><i class="fa fa-robot"></i> AI Basket Planner</a>
+      <a href="php-module/records.php" class="btn btn-secondary btn-lg"><i class="fa fa-database"></i> MySQL Records</a>
+    </div>
+  </div>
+  <div class="slide slide-2">
+    <h2 style="color:#28c76f;">BigBasket Mega Savings — Up to 40% Off</h2>
+    <p>Massive discounts on Daily Essentials, Organic Vegetables, A2 Milk &amp; Monthly Atta Packs.</p>
+    <a href="products.html" class="btn btn-secondary btn-lg">🛍️ Shop Mega Deals</a>
+  </div>
+  <div class="slide slide-3">
+    <h2 style="color:#00cfe8;">AI Nutrition &amp; Recipe Planner</h2>
+    <p>Tell AI what you plan to cook — it instantly builds your exact vegetable &amp; pantry basket.</p>
+    <a href="ai-assistant.html" class="btn btn-primary btn-lg">✨ Plan Your Meal</a>
+  </div>
+  <div class="slide slide-4">
+    <h2 style="color:#f5a623;">Morning Harvest: Delivered by 7 AM</h2>
+    <p>100% farm-sourced hybrid tomatoes, Himachal apples, A2 cow milk &amp; organic farm eggs.</p>
+    <a href="products.html" class="btn btn-success btn-lg">🍎 View Fresh Harvest</a>
+  </div>
+
+  <button class="slide-arrow prev" id="slidePrev" aria-label="Previous slide">❮</button>
+  <button class="slide-arrow next" id="slideNext" aria-label="Next slide">❯</button>
+  <div class="slide-controls">
+    <div class="dot active" data-slide="0"></div>
+    <div class="dot" data-slide="1"></div>
+    <div class="dot" data-slide="2"></div>
+    <div class="dot" data-slide="3"></div>
+  </div>
+</section>
+
+<!-- ════════════ WELCOME SECTION ════════════ -->
+<section class="section" style="background:var(--bg-2); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:center;" class="welcome-grid">
+      <div>
+        <p class="text-primary" style="font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">Welcome to</p>
+        <h2 class="section-title">FreshKart Grocery Supermarket</h2>
+        <p class="section-sub mt-2">Your intelligent BigBasket-style grocery assistant that understands your recipes, pantry needs, and budget to deliver fresh vegetables, fruits &amp; daily essentials in 15 minutes.</p>
+        <div class="grid-2 mt-3" style="gap:1rem;">
+          <div style="padding:1rem; background:var(--bg-3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <div style="font-size:1.5rem; margin-bottom:0.3rem;">🥦</div>
+            <strong style="font-size:0.88rem; color:var(--text-strong); display:block;">Farm to Fork</strong>
+            <p style="font-size:0.78rem;">Pesticide-tested, hygienically packed produce direct from local organic farmers.</p>
+          </div>
+          <div style="padding:1rem; background:var(--bg-3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <div style="font-size:1.5rem; margin-bottom:0.3rem;">⚡</div>
+            <strong style="font-size:0.88rem; color:var(--text-strong); display:block;">15-Min Express</strong>
+            <p style="font-size:0.78rem;">Lightning fast delivery of milk, fresh veggies, fruits and daily cleaning needs.</p>
+          </div>
+        </div>
+        <div class="flex gap-1 mt-3" style="flex-wrap:wrap;">
+          <a href="products.html" class="btn btn-primary">Start Shopping</a>
+          <a href="ai-assistant.html" class="btn btn-outline">Ask AI Assistant</a>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <div style="background:var(--gradient-card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; animation: zoomIn 0.6s ease;">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+            <div style="width:44px;height:44px; background:var(--gradient); border-radius:50%; display:flex;align-items:center;justify-content:center;font-size:1.3rem;">🤖</div>
+            <div>
+              <strong style="color:var(--text-strong); font-size:0.9rem;">FreshKart AI Assistant</strong>
+              <span style="display:block;font-size:0.75rem;color:var(--success);">● Online • 15m Delivery</span>
+            </div>
+          </div>
+          <div class="msg ai mb-2" style="max-width:100%; border-radius:12px;">Hello! I'm your FreshKart grocery assistant. Need fresh veggies, fruits, or daily essentials? Tell me your shopping list or dinner recipe! 🥦🍎</div>
+          <div class="msg user" style="max-width:100%;border-radius:12px;">I need fresh vegetables and milk under ₹200 for dinner</div>
+          <div class="msg ai mt-1" style="max-width:100%;border-radius:12px;">Great choice! I have added <strong>Farm Fresh Tomatoes (1kg - ₹38)</strong>, <strong>Green Capsicum (500g - ₹45)</strong>, and <strong>Amul Taaza Milk (1L - ₹72)</strong> — total just ₹155! Delivered in 15 mins. ✅</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ DASHBOARD STATS ════════════ -->
+<section class="section" id="dashboard">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Platform Overview</h2>
+        <p class="section-sub">Live statistics from the AI Personal Shopping Agent platform</p>
+      </div>
+      <div class="datetime-widget">
+        <i class="fa fa-calendar"></i>
+        <span id="full-datetime"></span>
+      </div>
+    </div>
+    <div class="stats-grid stagger" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" data-target="12480">0</div>
+        <div class="stat-label">Total Users</div>
+        <div class="stat-change up">↑ 12% this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🟢</div>
+        <div class="stat-value" data-target="3241">0</div>
+        <div class="stat-label">Active Users</div>
+        <div class="stat-change up">↑ 8% today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-value" data-target="8920">0</div>
+        <div class="stat-label">Total Products</div>
+        <div class="stat-change up">↑ 45 new today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-value" data-target="4320">0</div>
+        <div class="stat-label">Orders</div>
+        <div class="stat-change up">↑ 18% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" data-target="8920000" data-prefix="₹">0</div>
+        <div class="stat-label">Revenue</div>
+        <div class="stat-change up">↑ 24% this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💳</div>
+        <div class="stat-value" data-target="6120">0</div>
+        <div class="stat-label">Transactions</div>
+        <div class="stat-change up">↑ 15%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❤️</div>
+        <div class="stat-value" data-target="28400">0</div>
+        <div class="stat-label">Wishlist Items</div>
+        <div class="stat-change up">↑ 9%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛒</div>
+        <div class="stat-value" data-target="1820">0</div>
+        <div class="stat-label">Cart Items</div>
+        <div class="stat-change down">↓ 2% (conversions)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-value" data-target="5400">0</div>
+        <div class="stat-label">Notifications Sent</div>
+        <div class="stat-change up">↑ 31%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-value" data-target="340">0</div>
+        <div class="stat-label">Pending Orders</div>
+        <div class="stat-change down">↓ Processing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ QUICK AI ASSISTANT TEASER ════════════ -->
+<section class="section" style="background:var(--bg-2);">
+  <div class="container">
+    <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:2rem; align-items:start;">
+      <div>
+        <p class="text-primary" style="font-size:0.85rem; font-weight:600; text-transform:uppercase;">AI-Powered</p>
+        <h2 class="section-title mt-1">Personal Shopping Assistant</h2>
+        <p class="mt-2">Just type what you need in plain English. The AI understands budget, brand preferences, and specifications to match you with ideal products.</p>
+        <ul style="margin-top:1.25rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <li style="display:flex;gap:0.5rem;align-items:center;font-size:0.88rem;"><span style="color:var(--success);">✓</span> Natural language product search</li>
+          <li style="display:flex;gap:0.5rem;align-items:center;font-size:0.88rem;"><span style="color:var(--success);">✓</span> Budget-aware recommendations</li>
+          <li style="display:flex;gap:0.5rem;align-items:center;font-size:0.88rem;"><span style="color:var(--success);">✓</span> Pros & cons analysis</li>
+          <li style="display:flex;gap:0.5rem;align-items:center;font-size:0.88rem;"><span style="color:var(--success);">✓</span> Review summarization</li>
+          <li style="display:flex;gap:0.5rem;align-items:center;font-size:0.88rem;"><span style="color:var(--success);">✓</span> Smart comparison</li>
+        </ul>
+        <a href="ai-assistant.html" class="btn btn-primary mt-3">Launch AI Assistant →</a>
+      </div>
+      <div class="ai-chat-container" style="height:400px;">
+        <div class="chat-header">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <strong style="color:#fff;font-size:0.95rem;">FreshKart Assistant</strong>
+            <span style="font-size:0.75rem; opacity:0.8; display:block;">● Powered by AI</span>
+          </div>
+        </div>
+        <div class="quick-prompts" id="home-quick-prompts">
+          <span class="quick-prompt" data-msg="Fresh organic avocados and Alphonso mangoes">🍎 Fresh Fruits Basket</span>
+          <span class="quick-prompt" data-msg="Tomatoes, onions, potatoes and spinach for curry">🥦 Daily Veggies Bundle</span>
+          <span class="quick-prompt" data-msg="Pure cow milk, butter, paneer and brown eggs">🥛 Milk &amp; Dairy Daily</span>
+          <span class="quick-prompt" data-msg="Aashirvaad atta, basmati rice and toor dal">🌾 Monthly Staples Pack</span>
+          <span class="quick-prompt" data-msg="Surf Excel, Vim dishwash and Dettol handwash">🧼 Daily Needs &amp; Cleaners</span>
+        </div>
+        <div class="chat-messages" id="home-chat-messages">
+          <div class="msg ai">👋 Hi! I'm FreshKart. Looking for fresh vegetables, sweet fruits, dairy, or daily home essentials? Tell me your list or budget!</div>
+        </div>
+        <div class="chat-input-wrap">
+          <input type="text" id="home-chat-input" placeholder="e.g. Fresh vegetables and milk under ₹250 for today..." aria-label="Chat with AI" spellcheck="true" />
+          <button class="chat-send-btn" id="home-chat-send" aria-label="Send message">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ SHOP BY DEPARTMENT ════════════ -->
+<section class="section" style="padding-top:2.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="text-primary" style="font-size:0.82rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.25rem;">BigBasket Grocery Superstore</p>
+        <h2 class="section-title">Shop by Department</h2>
+        <p class="section-sub">100% farm-fresh vegetables, handpicked fruits, morning dairy, kitchen staples &amp; daily needs</p>
+      </div>
+      <a href="products.html" class="view-all">All Aisles →</a>
+    </div>
+
+    <div class="category-dept-grid">
+      <div class="dept-card" data-cat="Fresh Vegetables">
+        <div class="dept-icon">🥦</div>
+        <div class="dept-title">Fresh Vegetables</div>
+        <div class="dept-count">Tomatoes, Onions, Potatoes &amp; Greens</div>
+      </div>
+      <div class="dept-card" data-cat="Fresh Fruits">
+        <div class="dept-icon">🍎</div>
+        <div class="dept-title">Fresh Fruits</div>
+        <div class="dept-count">Alphonso Mangoes, Apples &amp; Bananas</div>
+      </div>
+      <div class="dept-card" data-cat="Dairy & Breakfast">
+        <div class="dept-icon">🥛</div>
+        <div class="dept-title">Dairy &amp; Breakfast</div>
+        <div class="dept-count">Pure Milk, Paneer, Butter &amp; Eggs</div>
+      </div>
+      <div class="dept-card" data-cat="Staples & Grains">
+        <div class="dept-icon">🌾</div>
+        <div class="dept-title">Staples &amp; Grains</div>
+        <div class="dept-count">Aashirvaad Atta, Basmati Rice &amp; Dals</div>
+      </div>
+      <div class="dept-card" data-cat="Snacks & Beverages">
+        <div class="dept-icon">🍪</div>
+        <div class="dept-title">Snacks &amp; Beverages</div>
+        <div class="dept-count">Tata Tea Gold, Nescafe &amp; Oats</div>
+      </div>
+      <div class="dept-card" data-cat="Daily Needs">
+        <div class="dept-icon">🧼</div>
+        <div class="dept-title">Daily Needs &amp; Cleaning</div>
+        <div class="dept-count">Surf Excel, Vim, Dettol &amp; Cleaners</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FEATURED VIDEO SPOTLIGHT ════════════ -->
+<section class="section" id="featured-video-spotlight" style="padding-top:1.5rem; padding-bottom:1.5rem;">
+  <div class="container">
+    <div class="card" style="background:linear-gradient(135deg, rgba(5,150,105,0.14) 0%, rgba(16,185,129,0.05) 100%); border:1.5px solid var(--border-focus); border-radius:var(--radius); padding:1.25rem 1.75rem; box-shadow:var(--shadow-sm); position:relative; overflow:hidden;">
+      <div class="video-section-grid" style="display:grid; grid-template-columns:1.15fr 1fr; gap:1.75rem; align-items:center;">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.6rem; flex-wrap:wrap;">
+            <span class="tag tag-primary"><i class="fa fa-play-circle"></i> FEATURED VIDEO</span>
+            <span class="tag tag-success"><i class="fa fa-sparkles"></i> Store Spotlight</span>
+          </div>
+          <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-strong); margin-bottom:0.5rem; line-height:1.3;">
+            Experience FreshKart: Farm-Fresh Groceries Delivered in 15 Minutes
+          </h3>
+          <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6; margin-bottom:1rem;">
+            Watch how our local organic farming network, hygienic cold-chain sorting, and smart delivery fleet bring fresh vegetables, fruits &amp; dairy to your kitchen.
+          </p>
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <a href="#featured-products" class="btn btn-primary btn-sm"><i class="fa fa-basket-shopping"></i> Browse Products Below ↓</a>
+            <a href="https://youtu.be/evgp6Bo_DTk" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm"><i class="fa fa-arrow-up-right-from-square"></i> Watch on YouTube</a>
+            <a href="url-analyzer.html?url=https://youtu.be/evgp6Bo_DTk" class="btn btn-outline btn-sm"><i class="fa fa-magnifying-glass"></i> Analyze Video URL 🔍</a>
+          </div>
+        </div>
+
+        <div style="position:relative; width:100%; border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:1.5px solid var(--border); aspect-ratio:16/9; max-height:250px; background:#000;">
+          <iframe 
+            src="https://www.youtube.com/embed/evgp6Bo_DTk" 
+            title="FreshKart Store Video"
+            style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ FEATURED PRODUCTS ════════════ -->
+<section class="section" id="featured-products">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-sub">Top picks curated by AI across all categories for you</p>
+      </div>
+      <a href="products.html" class="view-all">View All Products →</a>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="home-cat-filter" id="home-cat-filter">
+      <button class="cat-pill active" data-cat="all">🌟 All Groceries</button>
+      <button class="cat-pill" data-cat="Fresh Vegetables">🥦 Fresh Vegetables</button>
+      <button class="cat-pill" data-cat="Fresh Fruits">🍎 Fresh Fruits</button>
+      <button class="cat-pill" data-cat="Dairy & Breakfast">🥛 Dairy &amp; Breakfast</button>
+      <button class="cat-pill" data-cat="Staples & Grains">🌾 Staples &amp; Grains</button>
+      <button class="cat-pill" data-cat="Snacks & Beverages">🍪 Snacks &amp; Drinks</button>
+      <button class="cat-pill" data-cat="Daily Needs">🧼 Daily Needs</button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-wrap mb-3" style="max-width:100%;">
+      <span class="search-icon"><i class="fa fa-search"></i></span>
+      <input type="text" id="home-search" placeholder="Search fresh vegetables, fruits, dairy, staples, daily needs... (e.g. Tomato, Mango, Milk, Atta)" aria-label="Search products" />
+      <button class="search-btn">Search</button>
+    </div>
+
+    <div class="product-grid stagger" id="home-product-grid">
+      <!-- Products injected by JS -->
+    </div>
+    <div class="text-center mt-3" id="home-products-info" style="font-size:0.85rem; color:var(--text-muted);"></div>
+  </div>
+</section>
+
+<!-- ════════════ DRAG & DROP ZONES ════════════ -->
+<section class="section" style="background:var(--bg-2);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Smart Organization</h2>
+        <p class="section-sub">Drag product cards into your Cart, Wishlist, or Compare area</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.25rem;" id="drop-zones">
+      <div class="drop-zone" id="drop-cart" data-action="cart">
+        <span style="font-size:2rem;">🛒</span>
+        <strong>Drop to Cart</strong>
+        <small>Add product to cart</small>
+        <div id="drop-cart-list" style="width:100%;margin-top:0.5rem;"></div>
+      </div>
+      <div class="drop-zone" id="drop-wishlist" data-action="wishlist">
+        <span style="font-size:2rem;">❤️</span>
+        <strong>Drop to Wishlist</strong>
+        <small>Save for later</small>
+        <div id="drop-wishlist-list" style="width:100%;margin-top:0.5rem;"></div>
+      </div>
+      <div class="drop-zone" id="drop-compare" data-action="compare">
+        <span style="font-size:2rem;">⚖️</span>
+        <strong>Drop to Compare</strong>
+        <small>Up to 4 products</small>
+        <div id="drop-compare-list" style="width:100%;margin-top:0.5rem;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ RECOMMENDATIONS ════════════ -->
+<section class="section" id="recommendations">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Recommended For You</h2>
+        <p class="section-sub">Personalized picks based on trending activity</p>
+      </div>
+      <a href="products.html#recommendations" class="view-all">See All</a>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" role="tab" data-tab="trending" aria-selected="true">🔥 Trending</button>
+      <button class="tab-btn" role="tab" data-tab="budget" aria-selected="false">💰 Best Budget</button>
+      <button class="tab-btn" role="tab" data-tab="new" aria-selected="false">🆕 New Arrivals</button>
+      <button class="tab-btn" role="tab" data-tab="toprated" aria-selected="false">⭐ Top Rated</button>
+    </div>
+    <div class="tab-panel active" id="tab-trending">
+      <div class="product-grid stagger" id="rec-trending"></div>
+    </div>
+    <div class="tab-panel" id="tab-budget">
+      <div class="product-grid stagger" id="rec-budget"></div>
+    </div>
+    <div class="tab-panel" id="tab-new">
+      <div class="product-grid stagger" id="rec-new"></div>
+    </div>
+    <div class="tab-panel" id="tab-toprated">
+      <div class="product-grid stagger" id="rec-toprated"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ WEB STORAGE PANEL ════════════ -->
+<section class="section" style="background:var(--bg-2);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Web Storage Demo</h2>
+        <p class="section-sub">Demonstrates localStorage &amp; sessionStorage usage</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">💾 LocalStorage</div><span class="tag tag-primary">Permanent</span></div>
+        <div class="form-group">
+          <label class="form-label" for="ls-key">Key</label>
+          <input type="text" id="ls-key" class="form-control" placeholder="e.g. theme" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ls-val">Value</label>
+          <input type="text" id="ls-val" class="form-control" placeholder="e.g. dark" />
+        </div>
+        <div class="flex gap-1" style="flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" id="ls-save">Save</button>
+          <button class="btn btn-outline btn-sm" id="ls-get">Retrieve</button>
+          <button class="btn btn-danger btn-sm" id="ls-clear">Clear All</button>
+        </div>
+        <div id="ls-output" style="margin-top:1rem; font-size:0.82rem; color:var(--text-muted); min-height:40px; background:var(--bg-3); border-radius:var(--radius-sm); padding:0.75rem;"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📋 SessionStorage</div><span class="tag tag-warning">Temporary</span></div>
+        <div class="form-group">
+          <label class="form-label" for="ss-key">Key</label>
+          <input type="text" id="ss-key" class="form-control" placeholder="e.g. currentSearch" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ss-val">Value</label>
+          <input type="text" id="ss-val" class="form-control" placeholder="e.g. organic spinach" />
+        </div>
+        <div class="flex gap-1" style="flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" id="ss-save">Save</button>
+          <button class="btn btn-outline btn-sm" id="ss-get">Retrieve</button>
+          <button class="btn btn-danger btn-sm" id="ss-clear">Clear All</button>
+        </div>
+        <div id="ss-output" style="margin-top:1rem; font-size:0.82rem; color:var(--text-muted); min-height:40px; background:var(--bg-3); border-radius:var(--radius-sm); padding:0.75rem;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ AJAX / EXTERNAL DATA ════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Live Product Feed</h2>
+        <p class="section-sub">Products loaded asynchronously via AJAX from external JSON</p>
+      </div>
+      <button class="btn btn-primary btn-sm" id="ajax-load-btn">🔄 Load Products (AJAX)</button>
+    </div>
+    <div id="ajax-status"></div>
+    <div class="product-grid stagger" id="ajax-products"></div>
+  </div>
+</section>
+
+<!-- ════════════ ABOUT / FEATURES ════════════ -->
+<section class="section" style="background:var(--bg-2);">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Everything You Need</h2>
+        <p class="section-sub">30 powerful modules in one platform</p>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem;" class="stagger">
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">🤖</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">AI Assistant</strong>
+        <p style="font-size:0.78rem;">Natural language shopping guidance</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">⚖️</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">Product Comparison</strong>
+        <p style="font-size:0.78rem;">Side-by-side spec analysis</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">🎯</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">Smart Recommendations</strong>
+        <p style="font-size:0.78rem;">Personalized to your behavior</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">🛒</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">Smart Cart</strong>
+        <p style="font-size:0.78rem;">Dynamic cart with coupons</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">📦</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">Order Tracking</strong>
+        <p style="font-size:0.78rem;">Real-time delivery timeline</p>
+      </div>
+      <div class="card" style="text-align:center; padding:1.25rem;">
+        <div style="font-size:2rem; margin-bottom:0.5rem;">⭐</div>
+        <strong style="font-size:0.88rem; color:var(--text-strong); display:block; margin-bottom:0.25rem;">Reviews & Ratings</strong>
+        <p style="font-size:0.78rem;">Verified buyer reviews</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+          <div class="logo-icon">🛍️</div>
+          <strong style="font-size:1.1rem; color:var(--text-strong);">FreshKart</strong>
+        </div>
+        <p>FreshKart — your intelligent BigBasket-style grocery supermarket. 100% farm-fresh vegetables, fruits, dairy, and daily essentials delivered fast.</p>
+        <div class="social-links mt-2">
+          <a href="#" class="social-btn" aria-label="Twitter">🐦</a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">💼</a>
+          <a href="#" class="social-btn" aria-label="GitHub">🐙</a>
+          <a href="#" class="social-btn" aria-label="Instagram">📸</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="ai-assistant.html">AI Assistant</a></li>
+          <li><a href="compare.html">Compare</a></li>
+          <li><a href="orders.html">Orders</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="cart.html">Cart</a></li>
+          <li><a href="seller-dashboard.html">Sell on FreshKart</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="contact.html">Help Center</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+          <li><a href="url-analyzer.html">URL Analyzer</a></li>
+          <li><a href="admin-dashboard.html">Admin Panel</a></li>
+          <li><a href="php-module/index.html">PHP Module</a></li>
+          <li><a href="php-module/records.php">MySQL Records (phpMyAdmin)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AI Personal Shopping Agent. All rights reserved.</span>
+      <span>Developed by <strong>Rahul Kanth S</strong> | Roll No: 2303717620522015</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Fixed AI Chat Button -->
+<button class="fixed-chat-btn" id="fixedChatBtn" aria-label="Open AI Assistant" onclick="window.location='ai-assistant.html'">🤖</button>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/jquery-ops.js"></script>
+<script src="js/drag-drop.js"></script>
+</body>
+</html>
+

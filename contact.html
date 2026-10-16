@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Support &amp; Feedback — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">???</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="index.html" class="btn btn-outline btn-sm">Home</a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">?? Home</a></li>
+    <li><a href="products.html" class="nav-link">??? Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">?? AI Assistant</a></li>
+    <li><a href="contact.html" class="nav-link active">?? Support</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <h2>?? Get in Touch with Our Team</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">Have questions regarding an order, product compatibility, or platform feedback? We're here to assist.</p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container" style="max-width:860px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+      <!-- Contact Details -->
+      <div>
+        <h3 class="card-title mb-2">Support Channels</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; margin-bottom:1.5rem;">
+          Our customer happiness and technical support team is available 24/7. Average response time is under 15 minutes.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:1.25rem;">
+          <div style="display:flex; gap:1rem; align-items:center;">
+            <div style="width:44px; height:44px; border-radius:50%; background:var(--bg-3); display:flex; align-items:center; justify-content:center; font-size:1.2rem;">??</div>
+            <div>
+              <strong>Headquarters</strong>
+              <div style="font-size:0.82rem; color:var(--text-muted);">Vellore Institute of Technology, Chennai Campus, Tamil Nadu, India</div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:1rem; align-items:center;">
+            <div style="width:44px; height:44px; border-radius:50%; background:var(--bg-3); display:flex; align-items:center; justify-content:center; font-size:1.2rem;">??</div>
+            <div>
+              <strong>Support Email</strong>
+              <div style="font-size:0.82rem; color:var(--primary);">support@FreshKart-platform.com</div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:1rem; align-items:center;">
+            <div style="width:44px; height:44px; border-radius:50%; background:var(--bg-3); display:flex; align-items:center; justify-content:center; font-size:1.2rem;">??</div>
+            <div>
+              <strong>Toll-Free Helpline</strong>
+              <div style="font-size:0.82rem; color:var(--text-muted);">1800-419-SHOP (Mon–Sat 9AM–9PM IST)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact / Feedback Form -->
+      <div class="card">
+        <h3 class="card-title mb-2">Send Us a Message</h3>
+        <form id="contact-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="c-name">Full Name <span class="req">*</span></label>
+            <input type="text" id="c-name" class="form-control" placeholder="Your name" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c-email">Email Address <span class="req">*</span></label>
+            <input type="email" id="c-email" class="form-control" placeholder="you@domain.com" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c-subject">Subject</label>
+            <select id="c-subject" class="form-control">
+              <option value="order">Order Inquiry / Tracking</option>
+              <option value="product">Product Question / Compatibility</option>
+              <option value="seller">Seller / Vendor Registration</option>
+              <option value="feedback">Platform Feedback / Bug Report</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c-msg">Message / Details <span class="req">*</span></label>
+            <textarea id="c-msg" class="form-control" rows="4" placeholder="How can we assist you today?" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="c-submit">Submit Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('c-name').value.trim();
+    const email = document.getElementById('c-email').value.trim();
+    const msg = document.getElementById('c-msg').value.trim();
+
+    if (!name || !email || !msg) {
+      showToast('Please fill all required fields.', 'warning');
+      return;
+    }
+
+    showToast('Thank you! Your message has been received.', 'success', 4000);
+    e.target.reset();
+  });
+</script>
+</body>
+</html>
+
+

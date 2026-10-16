@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Products — AI Personal Shopping Agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 200px repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+    .comp-cell {
+      background: var(--card-bg);
+      padding: 1rem;
+      font-size: 0.88rem;
+    }
+    .comp-header-cell {
+      background: var(--bg-3);
+      font-weight: 700;
+      color: var(--text-strong);
+    }
+    .comp-label {
+      background: var(--bg-2);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .highlight-best {
+      background: rgba(40,199,111,0.08);
+      color: var(--success);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link active">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link">📋 Orders</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <h2>⚖️ Side-by-Side Product Comparison</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">Evaluate specs, pricing, ratings, and get an automated AI verdict on which product fits you best.</p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+      <div id="compare-count-msg" class="fw-bold" style="color:var(--primary);">Comparing items (Max 4)</div>
+      <div style="display:flex; gap:0.5rem;">
+        <select id="quick-add-compare" class="form-control" style="width:240px; font-size:0.85rem;">
+          <option value="">+ Add Product to Compare</option>
+        </select>
+        <button class="btn btn-outline btn-sm" id="clear-compare-btn">Clear All</button>
+      </div>
+    </div>
+
+    <!-- AI Verdict Card -->
+    <div class="card mb-3" id="ai-verdict-box" style="border-left:4px solid var(--primary); display:none;">
+      <div style="display:flex; gap:1rem; align-items:flex-start;">
+        <div style="font-size:2rem;">💡</div>
+        <div>
+          <h4 style="color:var(--text-strong); margin-bottom:0.25rem;">AI Shopping Agent Verdict</h4>
+          <p id="ai-verdict-text" style="font-size:0.9rem; line-height:1.6;"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table / Grid -->
+    <div id="comparison-container">
+      <!-- Injected table -->
+    </div>
+
+    <div id="compare-empty-state" class="empty-state" style="display:none;">
+      <div class="empty-icon">⚖️</div>
+      <h3>No products selected for comparison</h3>
+      <p>Select products from the catalog or dropdown above to view an in-depth spec comparison.</p>
+      <a href="products.html" class="btn btn-primary mt-2">Go to Catalog</a>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script>
+  function initQuickAdd() {
+    const sel = document.getElementById('quick-add-compare');
+    if (!sel || !window.PRODUCTS) return;
+    sel.innerHTML = '<option value="">+ Add Product to Compare</option>' +
+      window.PRODUCTS.map(p => `<option value="${p.id}">${p.name} (₹${p.price.toLocaleString('en-IN')})</option>`).join('');
+
+    sel.addEventListener('change', () => {
+      if (!sel.value) return;
+      let compare = JSON.parse(sessionStorage.getItem('FreshKart-compare') || '[]');
+      if (compare.includes(sel.value)) {
+        showToast('Item already in comparison', 'info');
+      } else if (compare.length >= 4) {
+        showToast('Max 4 items can be compared simultaneously', 'warning');
+      } else {
+        compare.push(sel.value);
+        sessionStorage.setItem('FreshKart-compare', JSON.stringify(compare));
+        showToast('Product added to comparison', 'success');
+        renderComparison();
+      }
+      sel.value = '';
+    });
+  }
+
+  function renderComparison() {
+    const compareIds = JSON.parse(sessionStorage.getItem('FreshKart-compare') || '["P001", "P004"]');
+    const container = document.getElementById('comparison-container');
+    const emptyState = document.getElementById('compare-empty-state');
+    const verdictBox = document.getElementById('ai-verdict-box');
+    const verdictText = document.getElementById('ai-verdict-text');
+
+    if (compareIds.length === 0) {
+      container.innerHTML = '';
+      verdictBox.style.display = 'none';
+      emptyState.style.display = 'block';
+      document.getElementById('compare-count-msg').textContent = 'Comparing 0 items';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    document.getElementById('compare-count-msg').textContent = `Comparing ${compareIds.length} item${compareIds.length > 1 ? 's' : ''} (Max 4)`;
+
+    const items = (window.PRODUCTS || []).filter(p => compareIds.includes(p.id));
+
+    if (items.length >= 2) {
+      verdictBox.style.display = 'block';
+      const bestRating = [...items].sort((a,b) => b.rating - a.rating)[0];
+      const lowestPrice = [...items].sort((a,b) => a.price - b.price)[0];
+      verdictText.innerHTML = `Comparing <strong>${items.map(i => i.name).join(' vs ')}</strong>: <br/>` +
+        `• <strong>Value Pick:</strong> <em>${lowestPrice.name}</em> offers the lowest entry price at ₹${lowestPrice.price.toLocaleString('en-IN')}.<br/>` +
+        `• <strong>Performance &amp; Satisfaction:</strong> <em>${bestRating.name}</em> leads with a customer rating of ${bestRating.rating}★ (${bestRating.reviews.toLocaleString()} reviews).`;
+    } else {
+      verdictBox.style.display = 'none';
+    }
+
+    const rows = [
+      { label: 'Image', render: p => `<img src="${p.image}" style="height:120px; width:100%; object-fit:cover; border-radius:6px;" alt="${p.name}"/>` },
+      { label: 'Name', render: p => `<strong>${p.name}</strong>` },
+      { label: 'Price', render: p => `<span style="font-size:1.1rem; font-weight:800; color:var(--primary);">₹${p.price.toLocaleString('en-IN')}</span>` },
+      { label: 'Discount', render: p => `<span class="tag tag-success">${p.discount}% OFF</span>` },
+      { label: 'Rating', render: p => `⭐ ${p.rating} / 5 (${p.reviews} reviews)` },
+      { label: 'Brand', render: p => p.brand },
+      { label: 'Category', render: p => p.category },
+      { label: 'Stock Status', render: p => `<span class="tag ${p.stock > 0 ? 'tag-info' : 'tag-danger'}">${p.stock > 0 ? 'In Stock (' + p.stock + ')' : 'Out of Stock'}</span>` },
+      { label: 'Description', render: p => `<small style="color:var(--text-muted);">${p.description}</small>` },
+      { label: 'Actions', render: p => `
+          <button class="btn btn-primary btn-sm btn-block" onclick="window.addToCart && addToCart(window.PRODUCTS.find(x => x.id === '${p.id}'))">🛒 Add to Cart</button>
+          <button class="btn btn-outline btn-sm btn-block mt-1" onclick="removeCompareItem('${p.id}')">✕ Remove</button>
+        ` }
+    ];
+
+    let html = `<div class="comparison-grid" style="grid-template-columns: 160px repeat(${items.length}, minmax(200px, 1fr));">`;
+
+    rows.forEach(row => {
+      html += `<div class="comp-cell comp-label">${row.label}</div>`;
+      items.forEach(p => {
+        html += `<div class="comp-cell">${row.render(p)}</div>`;
+      });
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
+  function removeCompareItem(id) {
+    let compare = JSON.parse(sessionStorage.getItem('FreshKart-compare') || '[]');
+    compare = compare.filter(i => i !== id);
+    sessionStorage.setItem('FreshKart-compare', JSON.stringify(compare));
+    renderComparison();
+    showToast('Removed from comparison', 'info');
+  }
+
+  document.getElementById('clear-compare-btn').addEventListener('click', () => {
+    sessionStorage.setItem('FreshKart-compare', '[]');
+    renderComparison();
+    showToast('Comparison cleared', 'warning');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initQuickAdd();
+    renderComparison();
+  });
+</script>
+</body>
+</html>
+

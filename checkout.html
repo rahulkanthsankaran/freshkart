@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .checkout-step {
+      display: none;
+    }
+    .checkout-step.active {
+      display: block;
+    }
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+    .step-node {
+      background: var(--bg-2);
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      z-index: 2;
+      transition: all var(--transition);
+    }
+    .step-node.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .step-node.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .payment-option {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all var(--transition);
+    }
+    .payment-option.selected {
+      border-color: var(--primary);
+      background: rgba(108,99,255,0.08);
+    }
+  </style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Secure Checkout</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <span style="font-size:0.85rem; color:var(--success);"><i class="fa fa-lock"></i> 256-Bit SSL Encrypted</span>
+  </div>
+</header>
+
+<main class="section">
+  <div class="container" style="max-width:900px;">
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div style="text-align:center;">
+        <div class="step-node active" id="node-1">1</div>
+        <small style="margin-top:0.3rem; display:block; font-size:0.75rem;">Shipping</small>
+      </div>
+      <div style="text-align:center;">
+        <div class="step-node" id="node-2">2</div>
+        <small style="margin-top:0.3rem; display:block; font-size:0.75rem;">Payment</small>
+      </div>
+      <div style="text-align:center;">
+        <div class="step-node" id="node-3">3</div>
+        <small style="margin-top:0.3rem; display:block; font-size:0.75rem;">Confirmation</small>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 320px; gap:2rem; align-items:start;">
+      <!-- Main Form Flow -->
+      <div class="card">
+        <!-- Step 1: Shipping Address -->
+        <div class="checkout-step active" id="step-1">
+          <h3 class="card-title mb-2">1. Delivery Address</h3>
+          <form id="shipping-form" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name <span class="req">*</span></label>
+                <input type="text" id="ship-name" class="form-control" placeholder="Rahul Kanth S" value="Rahul Kanth S" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number <span class="req">*</span></label>
+                <input type="tel" id="ship-phone" class="form-control" placeholder="10-digit mobile" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Street Address <span class="req">*</span></label>
+              <input type="text" id="ship-addr" class="form-control" placeholder="House/Flat No., Street, Landmark" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City <span class="req">*</span></label>
+                <input type="text" id="ship-city" class="form-control" placeholder="City" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Postal / PIN Code <span class="req">*</span></label>
+                <input type="text" id="ship-pin" class="form-control" placeholder="6-digit PIN" pattern="[0-9]{6}" required />
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-block btn-lg mt-2" onclick="goToStep(2)">Continue to Payment →</button>
+          </form>
+        </div>
+
+        <!-- Step 2: Payment Details -->
+        <div class="checkout-step" id="step-2">
+          <h3 class="card-title mb-2">2. Payment Method</h3>
+          
+          <div class="payment-option selected" onclick="selectPayment(this, 'upi')">
+            <input type="radio" name="paymentMethod" value="upi" checked />
+            <div style="flex:1;">
+              <strong>UPI / Instant Transfer</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Google Pay, PhonePe, Paytm, BHIM</div>
+            </div>
+            <span style="font-size:1.4rem;">📱</span>
+          </div>
+
+          <div class="payment-option" onclick="selectPayment(this, 'card')">
+            <input type="radio" name="paymentMethod" value="card" />
+            <div style="flex:1;">
+              <strong>Credit / Debit Card</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Visa, MasterCard, RuPay</div>
+            </div>
+            <span style="font-size:1.4rem;">💳</span>
+          </div>
+
+          <div class="payment-option" onclick="selectPayment(this, 'cod')">
+            <input type="radio" name="paymentMethod" value="cod" />
+            <div style="flex:1;">
+              <strong>Cash on Delivery (COD)</strong>
+              <div style="font-size:0.75rem; color:var(--text-muted);">Pay cash or scan QR on arrival</div>
+            </div>
+            <span style="font-size:1.4rem;">💵</span>
+          </div>
+
+          <div id="upi-details" class="mt-2 p-2" style="background:var(--bg-3); border-radius:var(--radius-sm);">
+            <label class="form-label" style="font-size:0.8rem;">Enter UPI ID / VPA</label>
+            <input type="text" class="form-control" placeholder="e.g. mobile@upi or username@okhdfcbank" value="buyer@okhdfcbank" />
+          </div>
+
+          <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="goToStep(1)">← Back</button>
+            <button type="button" class="btn btn-primary btn-block btn-lg" id="place-order-btn" onclick="placeOrder()">Place Order &amp; Pay</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Success Screen -->
+        <div class="checkout-step" id="step-3">
+          <div class="text-center py-3">
+            <div style="font-size:3.5rem; margin-bottom:1rem;">🎉</div>
+            <h2 style="color:var(--success); margin-bottom:0.5rem;">Order Placed Successfully!</h2>
+            <p style="color:var(--text-muted); font-size:0.9rem;">Thank you for shopping with FreshKart. Your order has been placed and confirmed.</p>
+            
+            <div class="card mt-3 mb-3" style="background:var(--bg-3); text-align:left;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+                <span>Order Reference:</span>
+                <strong id="confirmed-order-id" style="color:var(--primary);">ORD-2026-9812</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+                <span>Estimated Delivery:</span>
+                <strong>3-5 Business Days</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+                <span>Delivery Status:</span>
+                <span class="tag tag-success">Confirmed &amp; Processing</span>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; justify-content:center;">
+              <a href="orders.html" class="btn btn-primary">Track Your Order 📋</a>
+              <a href="index.html" class="btn btn-outline">Back to Home 🏠</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="card">
+        <h4 class="card-title mb-2">Order Review</h4>
+        <div id="checkout-items-preview" style="max-height:220px; overflow-y:auto; margin-bottom:1rem;">
+          <!-- Item list -->
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+          <span>Items Total</span>
+          <span id="ck-subtotal">₹0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem;">
+          <span>GST (18%)</span>
+          <span id="ck-tax">₹0</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-size:0.85rem; color:var(--success);">
+          <span>Shipping</span>
+          <span>FREE</span>
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:800;">
+          <span>Total</span>
+          <span id="ck-total" style="color:var(--primary);">₹0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  let currentStep = 1;
+
+  function goToStep(s) {
+    if (s === 2) {
+      const name = document.getElementById('ship-name').value.trim();
+      const phone = document.getElementById('ship-phone').value.trim();
+      const addr = document.getElementById('ship-addr').value.trim();
+      if (!name || !phone || !addr) {
+        showToast('Please fill all required shipping fields', 'warning');
+        return;
+      }
+    }
+
+    currentStep = s;
+    document.querySelectorAll('.checkout-step').forEach(el => el.classList.remove('active'));
+    document.getElementById(`step-${s}`).classList.add('active');
+
+    for (let i = 1; i <= 3; i++) {
+      const node = document.getElementById(`node-${i}`);
+      if (i < s) { node.className = 'step-node done'; node.textContent = '✓'; }
+      else if (i === s) { node.className = 'step-node active'; node.textContent = i; }
+      else { node.className = 'step-node'; node.textContent = i; }
+    }
+  }
+
+  function selectPayment(el, method) {
+    document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    const upiBox = document.getElementById('upi-details');
+    upiBox.style.display = (method === 'upi') ? 'block' : 'none';
+  }
+
+  function placeOrder() {
+    const btn = document.getElementById('place-order-btn');
+    btn.disabled = true;
+    btn.textContent = 'Processing Payment...';
+
+    setTimeout(() => {
+      const cart = JSON.parse(localStorage.getItem('FreshKart-cart') || '[]');
+      const newOrderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+      
+      const orders = JSON.parse(localStorage.getItem('FreshKart-orders') || '[]');
+      const shippingInfo = {
+        name: document.getElementById('ship-name')?.value.trim() || 'Verified Customer',
+        phone: document.getElementById('ship-phone')?.value.trim() || '+91 98765 43210',
+        address: document.getElementById('ship-addr')?.value.trim() || 'Tech Innovation Park',
+        city: document.getElementById('ship-city')?.value.trim() || 'Bangalore',
+        pincode: document.getElementById('ship-pin')?.value.trim() || '560001'
+      };
+
+      orders.unshift({
+        id: newOrderId,
+        date: new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }),
+        items: cart.length ? cart : [{ id:'P001', name:'Farm Fresh Hybrid Tomatoes (1 kg)', price:38, qty:2, image:'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80' }],
+        total: document.getElementById('ck-total').textContent,
+        status: 'Confirmed',
+        shipping: shippingInfo,
+        step: 2,
+        timeline: ['Order Confirmed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered']
+      });
+      localStorage.setItem('FreshKart-orders', JSON.stringify(orders));
+
+      // Clear cart
+      localStorage.setItem('FreshKart-cart', '[]');
+      window.updateCartBadge && updateCartBadge();
+
+      document.getElementById('confirmed-order-id').textContent = newOrderId;
+      goToStep(3);
+    }, 1200);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cart = JSON.parse(localStorage.getItem('FreshKart-cart') || '[]');
+    const preview = document.getElementById('checkout-items-preview');
+
+    const displayItems = cart.length ? cart : [
+      { id:'P001', name:'Farm Fresh Hybrid Tomatoes (1 kg)', price:38, qty:2, image:'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80' }
+    ];
+
+    preview.innerHTML = displayItems.map(i => `
+      <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem; font-size:0.8rem;">
+        <img src="${i.image}" style="width:36px; height:36px; border-radius:4px; object-fit:cover;" />
+        <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${i.name} × ${i.qty}</div>
+        <strong>₹${(i.price * i.qty).toLocaleString('en-IN')}</strong>
+      </div>
+    `).join('');
+
+    const sub = displayItems.reduce((acc, i) => acc + (i.price * i.qty), 0);
+    const tax = Math.round(sub * 0.18);
+    const tot = sub + tax;
+
+    document.getElementById('ck-subtotal').textContent = '₹' + sub.toLocaleString('en-IN');
+    document.getElementById('ck-tax').textContent = '₹' + tax.toLocaleString('en-IN');
+    document.getElementById('ck-total').textContent = '₹' + tot.toLocaleString('en-IN');
+  });
+</script>
+</body>
+</html>
+
+

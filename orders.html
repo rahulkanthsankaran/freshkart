@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orders &amp; Tracking — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .order-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .timeline-wrap {
+      display: flex;
+      justify-content: space-between;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+    .timeline-wrap::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: var(--border);
+      z-index: 1;
+    }
+    .timeline-step {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-2);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .timeline-step.completed .timeline-dot {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .timeline-step.active .timeline-dot {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(108,99,255,0.2);
+    }
+    .timeline-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .timeline-step.active .timeline-label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+      <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+    </div>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link active">📋 Orders</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <h2>📋 Your Orders &amp; Live Tracking</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">View order history, track shipment milestones, and download invoices.</p>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container" style="max-width:960px;">
+    <!-- Active / Past Orders List -->
+    <div id="orders-list-container">
+      <!-- Injected Orders -->
+    </div>
+
+    <div id="no-orders-msg" class="empty-state" style="display:none;">
+      <div class="empty-icon">📦</div>
+      <h3>No orders found</h3>
+      <p>You haven't placed any orders yet. Discover our latest tech gear!</p>
+      <a href="products.html" class="btn btn-primary mt-2">Browse Catalog</a>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  function renderOrders() {
+    let orders = JSON.parse(localStorage.getItem('FreshKart-orders') || '[]');
+
+    // Seed default demo order if none exist
+    if (orders.length === 0) {
+      orders = [
+        {
+          id: 'ORD-2026-8841',
+          date: '10 Oct 2026',
+          items: [
+            { id:'P001', name:'Farm Fresh Hybrid Tomatoes (1 kg)', price:38, qty:2, image:'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80' },
+            { id:'P023', name:'Country Fresh Pure Cow Milk (Pack of 2 Litres)', price:140, qty:1, image:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600&auto=format&fit=crop&q=80' }
+          ],
+          total: '₹216',
+          status: 'Shipped',
+          step: 3
+        }
+      ];
+      localStorage.setItem('FreshKart-orders', JSON.stringify(orders));
+    }
+
+    const container = document.getElementById('orders-list-container');
+    const emptyMsg = document.getElementById('no-orders-msg');
+
+    if (orders.length === 0) {
+      container.innerHTML = '';
+      emptyMsg.style.display = 'block';
+      return;
+    }
+
+    emptyMsg.style.display = 'none';
+
+    container.innerHTML = orders.map(ord => {
+      const currentStep = ord.step || 2;
+      return `
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <strong style="font-size:1.05rem; color:var(--text-strong);">${ord.id}</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.2rem;">Placed on ${ord.date}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+              <span class="tag tag-success">Status: ${ord.status || 'Processing'}</span>
+              <span style="font-weight:700; color:var(--primary); font-size:1.1rem;">${ord.total}</span>
+              <button class="btn btn-outline btn-sm" onclick="downloadInvoice('${ord.id}')" title="Download Invoice HTML">
+                📥 Download Invoice
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="printInvoice('${ord.id}')" title="Print or Save as PDF">
+                🖨️ Print / PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="timeline-wrap">
+            <div class="timeline-step ${currentStep >= 1 ? 'completed' : ''}">
+              <div class="timeline-dot">${currentStep > 1 ? '✓' : '1'}</div>
+              <div class="timeline-label">Order Placed</div>
+            </div>
+            <div class="timeline-step ${currentStep >= 2 ? (currentStep === 2 ? 'active' : 'completed') : ''}">
+              <div class="timeline-dot">${currentStep > 2 ? '✓' : '2'}</div>
+              <div class="timeline-label">Processing</div>
+            </div>
+            <div class="timeline-step ${currentStep >= 3 ? (currentStep === 3 ? 'active' : 'completed') : ''}">
+              <div class="timeline-dot">${currentStep > 3 ? '✓' : '3'}</div>
+              <div class="timeline-label">Shipped</div>
+            </div>
+            <div class="timeline-step ${currentStep >= 4 ? (currentStep === 4 ? 'active' : 'completed') : ''}">
+              <div class="timeline-dot">${currentStep > 4 ? '✓' : '4'}</div>
+              <div class="timeline-label">Out for Delivery</div>
+            </div>
+            <div class="timeline-step ${currentStep >= 5 ? 'completed' : ''}">
+              <div class="timeline-dot">${currentStep >= 5 ? '✓' : '5'}</div>
+              <div class="timeline-label">Delivered</div>
+            </div>
+          </div>
+
+          <!-- Items list -->
+          <div style="border-top:1px solid var(--border); padding-top:1rem; margin-top:1rem;">
+            ${(ord.items || []).map(item => `
+              <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.75rem; flex-wrap:wrap;">
+                <img src="${item.image}" style="width:50px; height:50px; object-fit:cover; border-radius:6px;" alt="${item.name}"/>
+                <div style="flex:1; min-width:200px;">
+                  <strong style="font-size:0.9rem; color:var(--text-strong);">${item.name}</strong>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">Qty: ${item.qty} · ₹${(item.price || 0).toLocaleString('en-IN')} each</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="downloadInvoice('${ord.id}')">📄 Get Invoice</button>
+                <button class="btn btn-primary btn-sm" onclick="window.addToCart && addToCart(item)">Buy Again</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* ────────── Invoice HTML Builder ────────── */
+  function generateInvoiceHTML(ord) {
+    const items = ord.items || [];
+    const subtotal = items.reduce((sum, item) => sum + ((item.price || 0) * (item.qty || 1)), 0);
+    const gst = Math.round(subtotal * 0.18);
+    const grandTotal = subtotal + gst;
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Invoice #${ord.id} - FreshKart</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: #f6f7fb; color: #1e293b; padding: 40px 20px; font-size: 14px; }
+    .invoice-box { max-width: 800px; margin: auto; background: #ffffff; padding: 36px 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 2px solid #6c63ff; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-logo { font-size: 32px; }
+    .brand-name { font-size: 24px; font-weight: 800; color: #6c63ff; letter-spacing: -0.5px; }
+    .brand-sub { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+    .inv-title { text-align: right; }
+    .inv-title h1 { font-size: 22px; color: #0f172a; margin-bottom: 4px; }
+    .inv-meta { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 28px 0; }
+    .party-title { font-size: 11px; text-transform: uppercase; font-weight: 700; color: #6c63ff; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .party-info { font-size: 13px; line-height: 1.6; color: #334155; }
+    table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    th { background: #f8fafc; color: #475569; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 14px; text-align: left; border-bottom: 1px solid #cbd5e1; }
+    td { padding: 14px; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #1e293b; }
+    .text-right { text-align: right; }
+    .totals { width: 320px; margin-left: auto; margin-top: 10px; }
+    .totals-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; color: #475569; }
+    .totals-row.grand { border-top: 2px solid #e2e8f0; border-bottom: 2px solid #e2e8f0; padding: 12px 0; margin-top: 8px; font-size: 16px; font-weight: 800; color: #0f172a; }
+    .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #94a3b8; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #dcfce7; color: #166534; }
+    .print-bar { text-align: center; margin-bottom: 20px; }
+    .print-btn { background: #6c63ff; color: #fff; border: none; padding: 10px 20px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .invoice-box { box-shadow: none; border: none; padding: 0; }
+      .print-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="print-bar">
+    <button class="print-btn" onclick="window.print()">🖨️ Click to Print / Save as PDF</button>
+  </div>
+  <div class="invoice-box">
+    <div class="header">
+      <div class="brand">
+        <span class="brand-logo">🛍️</span>
+        <div>
+          <div class="brand-name">FreshKart</div>
+          <div class="brand-sub">AI Personal Shopping Agent</div>
+        </div>
+      </div>
+      <div class="inv-title">
+        <h1>TAX INVOICE</h1>
+        <div class="inv-meta">
+          <div><strong>Invoice No:</strong> ${ord.id}</div>
+          <div><strong>Order Date:</strong> ${ord.date}</div>
+          <div><strong>Status:</strong> <span class="badge">PAID</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="parties">
+      <div>
+        <div class="party-title">Sold By</div>
+        <div class="party-info">
+          <strong>FreshKart Retail Network Ltd.</strong><br/>
+          Plot No. 42, Tech Innovation Zone<br/>
+          Cyber City, Bangalore, KA 560100<br/>
+          <strong>GSTIN:</strong> 29AAACS1429B1Z8<br/>
+          <strong>Support:</strong> support@FreshKart.com
+        </div>
+      </div>
+      <div>
+        <div class="party-title">Billed &amp; Shipped To</div>
+        <div class="party-info">
+          <strong>${ord.shipping?.name || 'Rahul Kanth S'}</strong><br/>
+          ${ord.shipping?.address || '104 Prime Enclave, Tech Park Road'}<br/>
+          ${ord.shipping?.city || 'Bangalore'} - ${ord.shipping?.pincode || '560001'}<br/>
+          <strong>Roll No:</strong> 2303717620522015<br/>
+          <strong>Contact:</strong> ${ord.shipping?.phone || '+91 98765 43210'}<br/>
+          <strong>Payment:</strong> Prepaid (Online Verified)
+        </div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th>Item Description</th>
+          <th class="text-right" style="width:70px;">Qty</th>
+          <th class="text-right" style="width:120px;">Unit Price</th>
+          <th class="text-right" style="width:120px;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${items.map((it, idx) => `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>
+              <strong>${it.name}</strong><br/>
+              <span style="font-size:11px; color:#64748b;">SKU: ${it.id} · 1-Year Brand Warranty</span>
+            </td>
+            <td class="text-right">${it.qty || 1}</td>
+            <td class="text-right">₹${(it.price || 0).toLocaleString('en-IN')}</td>
+            <td class="text-right">₹${((it.price || 0) * (it.qty || 1)).toLocaleString('en-IN')}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div class="totals-row">
+        <span>Items Subtotal:</span>
+        <span>₹${subtotal.toLocaleString('en-IN')}</span>
+      </div>
+      <div class="totals-row">
+        <span>Standard Shipping:</span>
+        <span style="color:#16a34a; font-weight:600;">FREE</span>
+      </div>
+      <div class="totals-row">
+        <span>Applicable GST (18%):</span>
+        <span>₹${gst.toLocaleString('en-IN')}</span>
+      </div>
+      <div class="totals-row grand">
+        <span>Total Amount:</span>
+        <span style="color:#6c63ff;">₹${grandTotal.toLocaleString('en-IN')}</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>This is a computer-generated tax invoice and requires no physical signature.</p>
+      <p style="margin-top:4px;">Thank you for shopping with <strong>FreshKart</strong>! For order queries or warranty claims, visit FreshKart.com/contact</p>
+    </div>
+  </div>
+</body>
+</html>`;
+  }
+
+  /* ────────── Download Action ────────── */
+  function downloadInvoice(orderId) {
+    const orders = JSON.parse(localStorage.getItem('FreshKart-orders') || '[]');
+    const ord = orders.find(o => o.id === orderId) || orders[0];
+    if (!ord) {
+      showToast('Order not found', 'error');
+      return;
+    }
+
+    const htmlContent = generateInvoiceHTML(ord);
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Invoice-${ord.id}.html`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast(`✅ Invoice for ${ord.id} downloaded successfully!`, 'success');
+  }
+
+  /* ────────── Print / Save PDF Action ────────── */
+  function printInvoice(orderId) {
+    const orders = JSON.parse(localStorage.getItem('FreshKart-orders') || '[]');
+    const ord = orders.find(o => o.id === orderId) || orders[0];
+    if (!ord) {
+      showToast('Order not found', 'error');
+      return;
+    }
+
+    const htmlContent = generateInvoiceHTML(ord);
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.open();
+      win.document.write(htmlContent);
+      win.document.close();
+      win.focus();
+      setTimeout(() => { win.print(); }, 400);
+      showToast(`🖨️ Opening print dialog for ${ord.id}...`, 'info');
+    } else {
+      // Pop-up blocker fallback: download directly
+      downloadInvoice(orderId);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', renderOrders);
+</script>
+</body>
+</html>
+
+

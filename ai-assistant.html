@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Shopping Assistant — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .ai-chat-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 1.5rem;
+      height: calc(100vh - 170px);
+      min-height: 580px;
+    }
+    .chat-sidebar {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .chat-main {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-history-item {
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+    }
+    .chat-history-item:hover, .chat-history-item.active {
+      background: var(--bg-3);
+      color: var(--text-strong);
+      border-color: var(--border);
+    }
+    .recommendation-card {
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .rec-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    @media (max-width: 768px) {
+      .ai-chat-layout { grid-template-columns: 1fr; height: auto; }
+      .chat-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link active">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link">📋 Orders</a></li>
+  </ul>
+</nav>
+
+<main class="section" style="padding-top:1.5rem; padding-bottom:1.5rem;">
+  <div class="container">
+    <div class="ai-chat-layout">
+      <!-- Chat Controls Sidebar -->
+      <aside class="chat-sidebar">
+        <button class="btn btn-primary btn-block" id="new-chat-btn"><i class="fa fa-plus"></i> New Shopping Session</button>
+        
+        <div>
+          <small class="fw-bold" style="text-transform:uppercase; color:var(--text-muted); font-size:0.75rem; letter-spacing:0.05em;">Suggested Prompts</small>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
+            <div class="chat-history-item" data-prompt="Suggest fresh vegetables and green herbs under ₹150 for dinner">🥦 Fresh Veggies for Dinner</div>
+            <div class="chat-history-item" data-prompt="Recommend sweet antioxidant fruits like mangoes and apples under ₹400">🍎 Fresh Fruits Basket</div>
+            <div class="chat-history-item" data-prompt="What dairy, pure milk and morning breakfast items should I order?">🥛 Milk &amp; Dairy Essentials</div>
+            <div class="chat-history-item" data-prompt="Give me a monthly staples list with whole wheat atta, basmati rice and dal">🌾 Monthly Staples Pack</div>
+            <div class="chat-history-item" data-prompt="Recommend trusted daily needs products for home cleaning and dishwashing">🧼 Daily Needs &amp; Cleaners</div>
+          </div>
+        </div>
+
+        <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.8rem; color:var(--text-muted);">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--success);"></span>
+            AI Shopping Engine Active
+          </div>
+          <small style="color:var(--text-muted); font-size:0.72rem; display:block; margin-top:0.25rem;">Analyzes live catalog, user budget & customer sentiment.</small>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <section class="chat-main">
+        <div class="chat-header" style="border-radius:0;">
+          <div class="ai-avatar">🤖</div>
+          <div>
+            <strong style="color:#fff; font-size:1rem;">FreshKart Grocery Shopping Agent</strong>
+            <span style="font-size:0.75rem; opacity:0.85; display:block;">Autonomous grocery discovery, freshness checking &amp; recipe-to-basket recommendations</span>
+          </div>
+        </div>
+
+        <!-- Chat Messages Stream -->
+        <div class="chat-messages" id="main-chat-stream">
+          <div class="msg ai">
+            👋 <strong>Welcome to FreshKart Personal Grocery Assistant!</strong><br/>
+            I am trained on our farm-to-table catalog, freshness metrics, seasonal fruits, and pantry essentials.<br/><br/>
+            Tell me what you're planning to cook, your budget constraints, or ask for weekly grocery bundles!
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div style="padding:1rem; background:var(--bg-2); border-top:1px solid var(--border);">
+          <div class="chat-input-wrap" style="padding:0; border:none; background:transparent;">
+            <input type="text" id="main-chat-input" placeholder="Ask anything, e.g. 'Build a fresh vegetable and milk basket under ₹250'..." autocomplete="off" spellcheck="true" />
+            <button class="chat-send-btn" id="main-chat-send" title="Send Message">➤</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script>
+  const chatStream = document.getElementById('main-chat-stream');
+  const chatInput  = document.getElementById('main-chat-input');
+  const chatSend   = document.getElementById('main-chat-send');
+
+  function appendChat(role, html) {
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.innerHTML = html;
+    chatStream.appendChild(div);
+    chatStream.scrollTop = chatStream.scrollHeight;
+  }
+
+  function handleUserMessage(query) {
+    if (!query.trim()) return;
+    appendChat('user', query);
+    chatInput.value = '';
+
+    const thinking = document.createElement('div');
+    thinking.className = 'msg ai';
+    thinking.innerHTML = '<span class="typing"></span> Analyzing catalog and specifications...';
+    chatStream.appendChild(thinking);
+    chatStream.scrollTop = chatStream.scrollHeight;
+
+    setTimeout(() => {
+      thinking.remove();
+      const response = generateAIAnswer(query);
+      appendChat('ai', response);
+    }, 900);
+  }
+
+  function generateAIAnswer(query) {
+    const q = query.toLowerCase();
+    const products = window.PRODUCTS || [];
+
+    // Vegetables
+    if (q.includes('veggie') || q.includes('vegetable') || q.includes('tomato') || q.includes('onion') || q.includes('potato') || q.includes('spinach') || q.includes('palak') || q.includes('capsicum') || q.includes('carrot') || q.includes('mushroom') || q.includes('dinner') || q.includes('curry')) {
+      const tom = products.find(p => p.id === 'P001') || products[0];
+      const cap = products.find(p => p.id === 'P004') || products[3];
+      const pal = products.find(p => p.id === 'P005') || products[4];
+      return `
+        🥦 <strong>Here are top farm-fresh vegetables for cooking:</strong><br/><br/>
+        1. <strong>${tom.name}</strong> — ₹${tom.price.toLocaleString('en-IN')}<br/>
+        • <em>Freshness:</em> Picked within 12 hours from local farms, naturally ripened.<br/>
+        ${makeCard(tom)}
+        <br/>
+        2. <strong>${cap.name}</strong> — ₹${cap.price.toLocaleString('en-IN')}<br/>
+        • <em>Highlights:</em> Crisp, crunchy, high in Vitamin C, pesticide tested.<br/>
+        ${makeCard(cap)}
+        <br/>
+        3. <strong>${pal.name}</strong> — ₹${pal.price.toLocaleString('en-IN')}<br/>
+        • <em>Highlights:</em> Hydroponic tender washed leaves rich in iron.<br/>
+        ${makeCard(pal)}
+      `;
+    }
+
+    // Fruits
+    if (q.includes('fruit') || q.includes('mango') || q.includes('avocado') || q.includes('apple') || q.includes('banana') || q.includes('orange') || q.includes('grape') || q.includes('watermelon')) {
+      const man = products.find(p => p.id === 'P013') || products[12];
+      const avo = products.find(p => p.id === 'P014') || products[13];
+      const app = products.find(p => p.id === 'P015') || products[14];
+      return `
+        🍎 <strong>Sweet &amp; Nutritious Farm-Picked Fruits:</strong><br/><br/>
+        1. <strong>${man.name}</strong> (Seasonal King) — ₹${man.price.toLocaleString('en-IN')}<br/>
+        • <em>Details:</em> Authentic GI-tagged Ratnagiri Alphonso with heavenly aroma.<br/>
+        ${makeCard(man)}
+        <br/>
+        2. <strong>${avo.name}</strong> — ₹${avo.price.toLocaleString('en-IN')}<br/>
+        • <em>Details:</em> Creamy, nutrient-rich Hass avocados packed with good fats.<br/>
+        ${makeCard(avo)}
+        <br/>
+        3. <strong>${app.name}</strong> — ₹${app.price.toLocaleString('en-IN')}<br/>
+        • <em>Details:</em> Crisp Shimla orchard red apples graded for freshness.<br/>
+        ${makeCard(app)}
+      `;
+    }
+
+    // Dairy & Breakfast
+    if (q.includes('dairy') || q.includes('milk') || q.includes('paneer') || q.includes('butter') || q.includes('curd') || q.includes('dahi') || q.includes('egg') || q.includes('ghee') || q.includes('breakfast')) {
+      const milk = products.find(p => p.id === 'P023') || products[22];
+      const pan = products.find(p => p.id === 'P025') || products[24];
+      const egg = products.find(p => p.id === 'P029') || products[28];
+      return `
+        🥛 <strong>Daily Milk, Dairy &amp; Breakfast Picks:</strong><br/><br/>
+        • <strong>${milk.name}</strong> — ₹${milk.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(milk)}
+        <br/>
+        • <strong>${pan.name}</strong> — ₹${pan.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(pan)}
+        <br/>
+        • <strong>${egg.name}</strong> — ₹${egg.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(egg)}
+      `;
+    }
+
+    // Staples & Atta / Rice / Dal
+    if (q.includes('staple') || q.includes('atta') || q.includes('flour') || q.includes('rice') || q.includes('basmati') || q.includes('dal') || q.includes('oil') || q.includes('salt') || q.includes('pantry')) {
+      const atta = products.find(p => p.id === 'P031') || products[30];
+      const rice = products.find(p => p.id === 'P032') || products[31];
+      const dal = products.find(p => p.id === 'P033') || products[32];
+      return `
+        🌾 <strong>Kitchen Staples &amp; Pantry Essentials:</strong><br/><br/>
+        • <strong>${atta.name}</strong> — ₹${atta.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(atta)}
+        <br/>
+        • <strong>${rice.name}</strong> — ₹${rice.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(rice)}
+        <br/>
+        • <strong>${dal.name}</strong> — ₹${dal.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(dal)}
+      `;
+    }
+
+    // Daily Needs & Cleaning
+    if (q.includes('clean') || q.includes('detergent') || q.includes('surf') || q.includes('vim') || q.includes('dishwash') || q.includes('dettol') || q.includes('handwash') || q.includes('paste') || q.includes('colgate') || q.includes('lizol') || q.includes('harpic') || q.includes('daily')) {
+      const surf = products.find(p => p.id === 'P045') || products[44];
+      const vim = products.find(p => p.id === 'P046') || products[45];
+      const dettol = products.find(p => p.id === 'P047') || products[46];
+      return `
+        🧼 <strong>Daily Household Needs &amp; Cleaning Essentials:</strong><br/><br/>
+        • <strong>${surf.name}</strong> — ₹${surf.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(surf)}
+        <br/>
+        • <strong>${vim.name}</strong> — ₹${vim.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(vim)}
+        <br/>
+        • <strong>${dettol.name}</strong> — ₹${dettol.price.toLocaleString('en-IN')}<br/>
+        ${makeCard(dettol)}
+      `;
+    }
+
+    // Compare
+    if (q.includes('compare')) {
+      return `
+        ⚖️ <strong>Grocery Comparison Insights:</strong><br/>
+        When comparing cooking oils or dairy products:<br/>
+        • <strong>Cold-Pressed / Extra Virgin:</strong> Higher nutritional retention and antioxidants.<br/>
+        • <strong>Refined Sunflower Oil:</strong> Higher smoke point, versatile for high-temperature frying.<br/>
+        <a href="compare.html" class="btn btn-outline btn-sm mt-1">Open Side-by-Side Comparison Matrix →</a>
+      `;
+    }
+
+    // General fallback
+    return `
+      🔍 I analyzed your prompt "<em>${query}</em>" across our grocery supermarket.<br/>
+      You can browse all 50 items in our <a href="products.html" style="color:var(--primary); font-weight:600;">Grocery Catalog</a> or try asking:<br/>
+      • "Fresh vegetables and herbs under ₹150 for dinner"<br/>
+      • "Seasonal fruits basket with Alphonso mangoes"<br/>
+      • "Pure cow milk and dairy essentials"<br/>
+      • "Monthly staples: whole wheat atta, rice and dal"<br/>
+      • "Daily needs: dishwash gel and detergent"
+    `;
+  }
+
+  function makeCard(p) {
+    if (!p) return '';
+    return `
+      <div class="recommendation-card">
+        <img src="${p.image}" class="rec-img" alt="${p.name}"/>
+        <div style="flex:1;">
+          <div style="font-weight:600; font-size:0.85rem; color:var(--text-strong);">${p.name}</div>
+          <div style="color:var(--primary); font-weight:700; font-size:0.85rem;">₹${p.price.toLocaleString('en-IN')}</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="window.addToCart && addToCart(window.PRODUCTS.find(x => x.id === '${p.id}'))">🛒 Add</button>
+      </div>
+    `;
+  }
+
+  chatSend.addEventListener('click', () => handleUserMessage(chatInput.value));
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleUserMessage(chatInput.value);
+  });
+
+  document.querySelectorAll('.chat-history-item').forEach(item => {
+    item.addEventListener('click', () => {
+      handleUserMessage(item.dataset.prompt);
+    });
+  });
+
+  document.getElementById('new-chat-btn').addEventListener('click', () => {
+    chatStream.innerHTML = `
+      <div class="msg ai">
+        👋 Started a fresh shopping session! What product can I help you find today?
+      </div>
+    `;
+  });
+</script>
+</body>
+</html>
+

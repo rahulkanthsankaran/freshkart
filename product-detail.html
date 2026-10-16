@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .gallery-main {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .gallery-thumbs {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .thumb-img {
+      width: 80px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all var(--transition);
+    }
+    .thumb-img.active {
+      border-color: var(--primary);
+    }
+    .ai-summary-badge {
+      background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(0,210,255,0.12));
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width: 768px) {
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+  </div>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link">📋 Orders</a></li>
+  </ul>
+</nav>
+
+<main class="section">
+  <div class="container">
+    <div style="margin-bottom:1.5rem; font-size:0.85rem; color:var(--text-muted);">
+      <a href="index.html" style="color:var(--text-muted);">Home</a> &gt;
+      <a href="products.html" style="color:var(--text-muted);">Products</a> &gt;
+      <span id="breadcrumb-product-name" style="color:var(--text-strong);">Product Details</span>
+    </div>
+
+    <div class="detail-grid">
+      <!-- Media Gallery -->
+      <div>
+        <img id="detail-main-img" class="gallery-main" src="https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80" alt="Product Image" />
+        <div class="gallery-thumbs" id="gallery-thumbs">
+          <!-- Injected thumbnails -->
+        </div>
+      </div>
+
+      <!-- Product Information -->
+        <span class="tag tag-primary" id="detail-category">Fresh Produce</span>
+        <h2 id="detail-title" style="margin:0.75rem 0 0.5rem; font-size:1.8rem; color:var(--text-strong);">Loading Product...</h2>
+        
+        <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+          <span id="detail-rating" style="color:var(--secondary); font-size:1.1rem;">★★★★☆</span>
+          <span id="detail-reviews-count" style="font-size:0.85rem; color:var(--text-muted);">(2,341 verified ratings)</span>
+          <span class="availability in-stock" id="detail-stock-badge">✓ In Stock</span>
+        </div>
+
+        <div style="display:flex; align-items:baseline; gap:1rem; margin-bottom:1.25rem;">
+          <span id="detail-price" style="font-size:2rem; font-weight:800; color:var(--primary);">₹0</span>
+          <span id="detail-orig-price" style="font-size:1.2rem; text-decoration:line-through; color:var(--text-muted);">₹0</span>
+          <span id="detail-discount-tag" class="product-discount">0% OFF</span>
+        </div>
+
+        <p id="detail-desc" style="color:var(--text); line-height:1.7; font-size:0.95rem;"></p>
+
+        <!-- AI Assistant Verdict & Review Synthesis -->
+        <div class="ai-summary-badge">
+          <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; color:var(--primary); margin-bottom:0.5rem;">
+            <span>🤖</span> AI Review Analysis &amp; Freshness Sentiment
+          </div>
+          <p id="ai-review-summary" style="font-size:0.88rem; line-height:1.6; color:var(--text-strong); margin:0;">
+            Based on sentiment analysis of 2,000+ customer reviews: 96% of buyers praised the crisp freshness, farm-direct harvest, and 15-minute doorstep delivery. 100% recommended for daily cooking and wholesome family nutrition.
+          </p>
+        </div>
+
+        <!-- Quantity & Action Buttons -->
+        <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1.5rem;">
+          <div class="qty-control" style="background:var(--bg-3); padding:0.4rem 0.6rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <button class="qty-btn" id="qty-minus">-</button>
+            <span class="qty-val" id="qty-val" style="padding:0 0.75rem; font-weight:700;">1</span>
+            <button class="qty-btn" id="qty-plus">+</button>
+          </div>
+          <button class="btn btn-primary btn-lg" id="add-to-cart-detail" style="flex:1;">🛒 Add to Basket</button>
+          <button class="btn btn-outline btn-lg" id="add-to-wishlist-detail">❤️ Wishlist</button>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); padding-top:1rem;">
+          <div>⚡ <strong>15-Min Delivery:</strong> Direct to doorstep</div>
+          <div>🥦 <strong>Farm Fresh:</strong> Pesticide tested daily</div>
+          <div>❄️ <strong>Cold Chain:</strong> Maintained under 4°C</div>
+          <div>💳 <strong>Payment:</strong> COD, UPI, Net Banking</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="mt-4 pt-4" style="border-top:1px solid var(--border);">
+      <h3 class="section-title mb-2">Frequently Bought Together</h3>
+      <div class="product-grid" id="related-products-grid"></div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const prodId = params.get('id') || 'P001';
+    const products = window.PRODUCTS || [];
+    const prod = products.find(p => p.id === prodId) || products[0];
+
+    if (!prod) return;
+
+    // Fill page elements
+    document.title = `${prod.name} — FreshKart`;
+    document.getElementById('breadcrumb-product-name').textContent = prod.name;
+    document.getElementById('detail-main-img').src = prod.image;
+    document.getElementById('detail-category').textContent = `${prod.brand} · ${prod.category}`;
+    document.getElementById('detail-title').textContent = prod.name;
+    document.getElementById('detail-price').textContent = '₹' + prod.price.toLocaleString('en-IN');
+    document.getElementById('detail-orig-price').textContent = '₹' + prod.originalPrice.toLocaleString('en-IN');
+    document.getElementById('detail-discount-tag').textContent = `${prod.discount}% OFF`;
+    document.getElementById('detail-desc').textContent = prod.description;
+    document.getElementById('detail-reviews-count').textContent = `(${prod.reviews.toLocaleString()} verified ratings)`;
+
+    // Thumbs
+    const thumbsContainer = document.getElementById('gallery-thumbs');
+    const baseImg = prod.image.split('?')[0];
+    const images = [
+      prod.image,
+      `${baseImg}?w=600&auto=format&fit=crop&q=80&crop=edges`,
+      `${baseImg}?w=600&auto=format&fit=crop&q=80&crop=faces`
+    ];
+    thumbsContainer.innerHTML = images.map((img, idx) => `
+      <img src="${img}" class="thumb-img ${idx === 0 ? 'active' : ''}" onclick="switchImg('${img}', this)" alt="Thumbnail ${idx+1}"/>
+    `).join('');
+
+    // Quantity
+    let qty = 1;
+    document.getElementById('qty-plus').addEventListener('click', () => {
+      qty++;
+      document.getElementById('qty-val').textContent = qty;
+    });
+    document.getElementById('qty-minus').addEventListener('click', () => {
+      if (qty > 1) qty--;
+      document.getElementById('qty-val').textContent = qty;
+    });
+
+    // Add to Cart
+    document.getElementById('add-to-cart-detail').addEventListener('click', () => {
+      window.addToCart && addToCart(prod, qty);
+    });
+
+    // Add to Wishlist
+    document.getElementById('add-to-wishlist-detail').addEventListener('click', () => {
+      window.toggleWishlist && toggleWishlist(prod.id);
+    });
+
+    // Related products
+    const related = products.filter(p => p.id !== prod.id && p.category === prod.category).slice(0, 4);
+    if (window.renderProducts) {
+      renderProducts(related.length ? related : products.slice(0, 4), 'related-products-grid');
+    }
+  });
+
+  function switchImg(url, el) {
+    document.getElementById('detail-main-img').src = url;
+    document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
+

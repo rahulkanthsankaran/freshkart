@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — AI Personal Shopping Agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="header-actions">
+      <a href="php-module/records.php" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> View Database Records</a>
+      <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+    </div>
+  </div>
+</header>
+
+<main class="section" style="min-height:calc(100vh - 70px);">
+  <div class="container" style="max-width:860px;">
+    <div class="text-center mb-3">
+      <h2 class="section-title">Create Your Account</h2>
+      <p>Join FreshKart and get personalized product recommendations powered by AI.</p>
+    </div>
+
+    <!-- Creative Live Green Membership Badge -->
+    <div class="card mb-3" style="background: linear-gradient(135deg, rgba(5,150,105,0.18) 0%, rgba(16,185,129,0.06) 100%); border: 1.5px solid var(--border-focus); border-radius: var(--radius); padding: 1.25rem 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; align-items: center; gap: 1.25rem;">
+        <div id="preview-avatar" style="width: 52px; height: 52px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: #fff; box-shadow: 0 6px 16px var(--primary-glow);">
+          🌱
+        </div>
+        <div>
+          <span class="tag tag-primary mb-1" style="font-size: 0.72rem;"><i class="fa fa-shield-halved"></i> FRESHKART VIP MEMBER</span>
+          <h3 id="preview-name" style="margin: 0; font-size: 1.15rem; color: var(--text-strong);">New Customer</h3>
+          <p id="preview-meta" style="margin: 0; font-size: 0.82rem; color: var(--text-muted);">Enter details below &bull; Directly saves to MySQL (phpMyAdmin)</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <span class="tag tag-success" style="padding: 0.45rem 0.9rem;"><i class="fa fa-database"></i> MySQL Live</span>
+        <a href="php-module/records.php" class="btn btn-outline btn-sm"><i class="fa fa-table"></i> Records Table</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <form id="register-form" novalidate enctype="multipart/form-data" autocomplete="off">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+
+          <!-- Left column -->
+          <div>
+            <h3 style="margin-bottom:1.25rem; color:var(--primary); font-size:0.95rem; text-transform:uppercase; letter-spacing:0.05em;">Personal Information</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="fullName">Full Name <span class="req">*</span></label>
+              <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" maxlength="80" required aria-describedby="fullName-err" />
+              <span class="error-msg" id="fullName-err"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address <span class="req">*</span></label>
+              <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required aria-describedby="email-err" />
+              <span class="error-msg" id="email-err"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone Number <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" class="form-control" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" maxlength="10" required aria-describedby="phone-err" />
+              <span class="error-msg" id="phone-err"></span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="dob">Date of Birth <span class="req">*</span></label>
+                <input type="date" id="dob" name="dob" class="form-control" required max="2008-12-31" min="1940-01-01" aria-describedby="dob-err" />
+                <span class="error-msg" id="dob-err"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="age">Age</label>
+                <input type="number" id="age" name="age" class="form-control" placeholder="Age" min="5" max="120" readonly />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Gender <span class="req">*</span></label>
+              <div style="display:flex; gap:1.5rem; margin-top:0.25rem;">
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                  <input type="radio" name="gender" value="male" required /> Male
+                </label>
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                  <input type="radio" name="gender" value="female" /> Female
+                </label>
+                <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+                  <input type="radio" name="gender" value="other" /> Other
+                </label>
+              </div>
+              <span class="error-msg" id="gender-err"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="pref-time">Preferred Shopping Time</label>
+              <input type="time" id="pref-time" name="prefTime" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">Password <span class="req">*</span></label>
+              <input type="password" id="password" name="password" class="form-control" placeholder="Min 8 chars, 1 uppercase, 1 number" minlength="8" pattern="(?=.*[A-Z])(?=.*[0-9]).{8,}" required aria-describedby="password-err" />
+              <span class="error-msg" id="password-err"></span>
+              <div id="pw-strength" style="height:4px;border-radius:2px;margin-top:5px;transition:all 0.3s;"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmPw">Confirm Password <span class="req">*</span></label>
+              <input type="password" id="confirmPw" name="confirmPw" class="form-control" placeholder="Re-enter your password" required aria-describedby="confirmPw-err" />
+              <span class="error-msg" id="confirmPw-err"></span>
+            </div>
+          </div>
+
+          <!-- Right column -->
+          <div>
+            <h3 style="margin-bottom:1.25rem; color:var(--primary); font-size:0.95rem; text-transform:uppercase; letter-spacing:0.05em;">Address &amp; Preferences</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="address">Address</label>
+              <textarea id="address" name="address" class="form-control" rows="2" placeholder="House / Flat No., Street, Area" spellcheck="true" maxlength="200"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="city">City <span class="req">*</span></label>
+                <input type="text" id="city" name="city" class="form-control" placeholder="City" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="state">State <span class="req">*</span></label>
+                <select id="state" name="state" class="form-control" required aria-describedby="state-err">
+                  <option value="">Select State</option>
+                  <option>Tamil Nadu</option><option>Maharashtra</option><option>Karnataka</option>
+                  <option>Delhi</option><option>West Bengal</option><option>Uttar Pradesh</option>
+                  <option>Gujarat</option><option>Rajasthan</option><option>Telangana</option><option>Kerala</option>
+                </select>
+                <span class="error-msg" id="state-err"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="country">Country</label>
+              <select id="country" name="country" class="form-control">
+                <option value="IN" selected>India 🇮🇳</option>
+                <option value="US">United States 🇺🇸</option>
+                <option value="UK">United Kingdom 🇬🇧</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Preferred Categories</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.35rem;">
+                <label class="filter-option"><input type="checkbox" name="categories" value="Fresh Vegetables" checked /> 🥦 Fresh Vegetables</label>
+                <label class="filter-option"><input type="checkbox" name="categories" value="Fresh Fruits" checked /> 🍎 Fresh Fruits</label>
+                <label class="filter-option"><input type="checkbox" name="categories" value="Dairy & Breakfast" checked /> 🥛 Dairy &amp; Breakfast</label>
+                <label class="filter-option"><input type="checkbox" name="categories" value="Staples & Grains" /> 🌾 Staples &amp; Grains</label>
+                <label class="filter-option"><input type="checkbox" name="categories" value="Snacks & Beverages" /> 🍪 Snacks &amp; Drinks</label>
+                <label class="filter-option"><input type="checkbox" name="categories" value="Daily Needs" /> 🧼 Daily Needs &amp; Cleaners</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Preferred Brands</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.35rem;">
+                <label class="filter-option"><input type="checkbox" name="brands" value="FreshFarm" checked /> FreshFarm</label>
+                <label class="filter-option"><input type="checkbox" name="brands" value="Amul" checked /> Amul</label>
+                <label class="filter-option"><input type="checkbox" name="brands" value="Aashirvaad" /> Aashirvaad</label>
+                <label class="filter-option"><input type="checkbox" name="brands" value="Tata" /> Tata</label>
+                <label class="filter-option"><input type="checkbox" name="brands" value="Surf Excel" /> Surf Excel</label>
+                <label class="filter-option"><input type="checkbox" name="brands" value="Dettol" /> Dettol</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="budget">Monthly Grocery Budget</label>
+              <select id="budget" name="budget" class="form-control">
+                <option value="">Select Budget</option>
+                <option value="0-1000">Under ₹1,000 (Quick Needs)</option>
+                <option value="1000-2500">₹1,000 – ₹2,500 (Weekly Basket)</option>
+                <option value="2500-5000">₹2,500 – ₹5,000 (Family Staples)</option>
+                <option value="5000-10000">₹5,000 – ₹10,000 (Monthly Full Pantry)</option>
+                <option value="10000+">Above ₹10,000</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="skills">Interests / Skills</label>
+              <input type="text" id="skills" name="skills" class="form-control" placeholder="e.g. Gaming, Photography, Music" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="profile-pic">Profile Picture</label>
+              <input type="file" id="profile-pic" name="profilePic" class="form-control" accept="image/jpeg,image/png,image/webp" aria-describedby="pic-err" />
+              <span class="error-msg" id="pic-err"></span>
+              <small style="color:var(--text-muted); font-size:0.75rem;">Max 2MB. JPG, PNG, WebP</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comments (contenteditable + spellcheck) -->
+        <div class="form-group">
+          <label class="form-label">Additional Comments / Notes</label>
+          <div id="user-notes" contenteditable="true" spellcheck="true"
+            style="background:var(--bg-3); border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:0.65rem 1rem; color:var(--text); min-height:70px; font-size:0.9rem; font-family:var(--font);"
+            aria-label="Additional notes">Type any additional information here...</div>
+        </div>
+
+        <div id="form-success" class="success-msg mb-2" style="display:none; font-size:0.9rem;"></div>
+        <div id="form-error-summary" class="error-msg mb-2" style="display:none; font-size:0.9rem;"></div>
+
+        <div class="flex gap-1" style="flex-wrap:wrap;">
+          <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Create Account</button>
+          <button type="reset" class="btn btn-outline btn-lg" id="reset-btn">Reset Form</button>
+          <button type="button" class="btn btn-danger btn-lg" onclick="window.location='index.html'">Cancel</button>
+        </div>
+
+        <p style="margin-top:1.25rem; font-size:0.85rem; color:var(--text-muted);">
+          Already have an account? <a href="login.html" style="color:var(--primary); font-weight:600;">Sign In →</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* ── Registration Form Validation ── */
+(function() {
+  const form = document.getElementById('register-form');
+  const dob  = document.getElementById('dob');
+  const age  = document.getElementById('age');
+
+  // Auto-calculate age from DOB
+  dob?.addEventListener('change', () => {
+    const d = new Date(dob.value);
+    const diff = Date.now() - d.getTime();
+    const a = Math.abs(new Date(diff).getUTCFullYear() - 1970);
+    age.value = a;
+    if (a < 5 || a > 120) setError('dob', 'Please enter a valid date of birth.');
+    else clearError('dob');
+  });
+
+  // Password strength
+  document.getElementById('password')?.addEventListener('input', function() {
+    const v = this.value;
+    const bar = document.getElementById('pw-strength');
+    let strength = 0;
+    if (v.length >= 8) strength++;
+    if (/[A-Z]/.test(v)) strength++;
+    if (/[0-9]/.test(v)) strength++;
+    if (/[^A-Za-z0-9]/.test(v)) strength++;
+    const colors = ['', 'var(--danger)', 'var(--warning)', 'var(--info)', 'var(--success)'];
+    const widths = ['0%', '25%', '50%', '75%', '100%'];
+    if (bar) { bar.style.width = widths[strength]; bar.style.background = colors[strength]; }
+  });
+
+  // File validation
+  document.getElementById('profile-pic')?.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { setError('pic', 'File size must be under 2MB.'); this.value = ''; return; }
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type)) { setError('pic', 'Only JPG, PNG, WebP files allowed.'); this.value = ''; return; }
+    clearError('pic'); 
+  });
+
+  function setError(field, msg) {
+    const el = document.getElementById(`${field}-err`);
+    const inp = document.getElementById(field);
+    if (el) el.textContent = msg;
+    if (inp) inp.classList.add('error');
+  }
+  function clearError(field) {
+    const el  = document.getElementById(`${field}-err`);
+    const inp = document.getElementById(field);
+    if (el) el.textContent = '';
+    if (inp) { inp.classList.remove('error'); inp.classList.add('success'); }
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    const fields = [
+      { id:'fullName', msg:'Full name is required (min 2 characters).', check: v => v.trim().length >= 2 },
+      { id:'email', msg:'Please enter a valid email address.', check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { id:'phone', msg:'Enter a valid 10-digit Indian mobile number.', check: v => /^[6-9][0-9]{9}$/.test(v) },
+      { id:'dob', msg:'Date of birth is required.', check: v => !!v },
+      { id:'city', msg:'City is required.', check: v => v.trim().length > 0 },
+      { id:'state', msg:'Please select a state.', check: v => !!v },
+      { id:'password', msg:'Password must be 8+ chars with uppercase and number.', check: v => /(?=.*[A-Z])(?=.*[0-9]).{8,}/.test(v) },
+    ];
+
+    fields.forEach(f => {
+      const el = document.getElementById(f.id);
+      if (!el) return;
+      if (!f.check(el.value)) { setError(f.id, f.msg); valid = false; }
+      else clearError(f.id);
+    });
+
+    // Confirm password
+    const pw = document.getElementById('password')?.value;
+    const cpw = document.getElementById('confirmPw')?.value;
+    if (pw !== cpw) { setError('confirmPw', 'Passwords do not match.'); valid = false; }
+    else clearError('confirmPw');
+
+    // Gender
+    if (!document.querySelector('input[name="gender"]:checked')) {
+      document.getElementById('gender-err').textContent = 'Please select a gender.';
+      valid = false;
+    } else { document.getElementById('gender-err').textContent = ''; }
+
+    if (!valid) {
+      const errSummary = document.getElementById('form-error-summary');
+      if (errSummary) { errSummary.textContent = '⚠️ Please fix the errors above before submitting.'; errSummary.style.display = 'block'; }
+      return;
+    }
+
+    // Submit to PHP Backend (MySQL / phpMyAdmin)
+    const errSummary = document.getElementById('form-error-summary');
+    const successEl = document.getElementById('form-success');
+    const submitBtn = document.getElementById('submit-btn');
+    if (errSummary) errSummary.style.display = 'none';
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving to MySQL (phpMyAdmin)...';
+
+    const formData = new FormData(form);
+    const userNotesEl = document.getElementById('user-notes');
+    if (userNotesEl) {
+      formData.append('userNotes', userNotesEl.innerText.trim());
+    }
+    formData.append('ajax', '1');
+
+    fetch('php-module/process.php', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error((data && data.errors) ? data.errors.join('; ') : 'Server error ' + res.status);
+      }
+      return data;
+    })
+    .then(data => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create Account';
+
+      if (data && data.success) {
+        successEl.innerHTML = `
+          <div style="font-weight:700; font-size:1.05rem; margin-bottom:4px;">
+            <i class="fa fa-circle-check"></i> Registration Saved to phpMyAdmin!
+          </div>
+          <div>User ID: <strong>#${data.userId}</strong> | Full Name: <strong>${data.userName || ''}</strong></div>
+          <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="php-module/records.php" class="btn btn-primary btn-sm"><i class="fa fa-table"></i> View in Records Table</a>
+            <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> Open in phpMyAdmin ↗</a>
+            <a href="login.html" class="btn btn-outline btn-sm">Proceed to Login →</a>
+          </div>
+        `;
+        successEl.style.display = 'block';
+        window.showToast && showToast('Account saved to MySQL database!', 'success', 5000);
+        form.reset();
+      } else {
+        errSummary.innerHTML = '⚠️ ' + (data && data.errors ? data.errors.join('<br>') : 'Registration failed.');
+        errSummary.style.display = 'block';
+      }
+    })
+    .catch(err => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create Account';
+      errSummary.innerHTML = `
+        <div style="font-weight:700; margin-bottom:4px;"><i class="fa fa-circle-xmark"></i> Could not save to MySQL:</div>
+        <div>${err.message || 'Unable to connect to PHP server.'}</div>
+        <div style="margin-top:6px; font-size:0.8rem; color:var(--text-muted);">
+          Please ensure XAMPP Apache and MySQL services are running and you are accessing this site via <code>http://localhost/FreshKart/register.html</code>.
+        </div>
+      `;
+      errSummary.style.display = 'block';
+    });
+  });
+
+  // Blur validation
+  ['fullName','email','phone','password','city'].forEach(id => {
+    document.getElementById(id)?.addEventListener('blur', function() {
+      if (!this.value.trim()) setError(id, 'This field is required.');
+      else clearError(id);
+    });
+  });
+
+  // Live Membership Preview Card update
+  document.getElementById('fullName')?.addEventListener('input', function() {
+    const val = this.value.trim();
+    const pName = document.getElementById('preview-name');
+    const pAvatar = document.getElementById('preview-avatar');
+    if (pName) pName.textContent = val || 'New Customer';
+    if (pAvatar) pAvatar.textContent = val ? val[0].toUpperCase() : '🌱';
+  });
+
+  const updateMeta = () => {
+    const email = document.getElementById('email')?.value.trim();
+    const city = document.getElementById('city')?.value.trim();
+    const state = document.getElementById('state')?.value.trim();
+    const pMeta = document.getElementById('preview-meta');
+    if (!pMeta) return;
+    let parts = [];
+    if (email) parts.push(email);
+    if (city || state) parts.push([city, state].filter(Boolean).join(', '));
+    pMeta.textContent = parts.length ? parts.join(' • ') : 'Enter details below • Directly saves to MySQL (phpMyAdmin)';
+  };
+  document.getElementById('email')?.addEventListener('input', updateMeta);
+  document.getElementById('city')?.addEventListener('input', updateMeta);
+  document.getElementById('state')?.addEventListener('change', updateMeta);
+})();
+</script>
+</body>
+</html>
+
+

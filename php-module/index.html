@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PHP + MySQL Registration Form — FreshKart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .success-box { background:#ecfdf5; border:1.5px solid #10b981; color:#065f46; border-radius:var(--radius-sm); padding:1rem; }
+    .error-box { background:#fef2f2; border:1.5px solid #ef4444; color:#991b1b; border-radius:var(--radius-sm); padding:1rem; }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🐘</div>
+    <div class="logo-text"><h1>FreshKart PHP &amp; MySQL Module</h1><span>Server-Side Database Processing</span></div>
+  </div>
+  <div class="header-right" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <a href="records.php" class="btn btn-outline btn-sm"><i class="fa fa-table-list"></i> View Database Records 📋</a>
+    <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> Open phpMyAdmin ↗</a>
+    <a href="../register.html" class="btn btn-outline btn-sm">Main Registration</a>
+    <a href="../index.html" class="btn btn-primary btn-sm">Main Storefront 🛍️</a>
+  </div>
+</header>
+
+<main class="section">
+  <div class="container" style="max-width:840px;">
+    <div class="text-center mb-3">
+      <h2 class="section-title">Registration Form (PHP + MySQL Backend)</h2>
+      <p>Submits directly to <code>process.php</code> and stores live records in your MySQL database table <code>users</code> via PDO.</p>
+    </div>
+
+    <!-- Live MySQL Status Banner -->
+    <div class="card mb-3" style="background: linear-gradient(135deg, rgba(5,150,105,0.18) 0%, rgba(16,185,129,0.06) 100%); border: 1.5px solid var(--border-focus); border-radius: var(--radius); padding: 1.25rem 1.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; color: #fff; box-shadow: 0 4px 14px var(--primary-glow);">
+          🐘
+        </div>
+        <div>
+          <span class="tag tag-primary mb-1" style="font-size: 0.72rem;"><i class="fa fa-database"></i> MYSQL LIVE ENGINE</span>
+          <h3 style="margin: 0; font-size: 1.1rem; color: var(--text-strong);">PHP + MySQL Form Gateway</h3>
+          <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Database: <code>freshkart_db</code> &bull; Table: <code>users</code></p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="records.php" class="btn btn-primary btn-sm"><i class="fa fa-table-list"></i> Records Table</a>
+        <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-external-link"></i> phpMyAdmin ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <form id="php-reg-form" action="process.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="ajax" value="1" />
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+          <div class="form-group">
+            <label class="form-label">Full Name <span class="req">*</span></label>
+            <input type="text" name="fullName" class="form-control" placeholder="Enter full name" required minlength="2" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address <span class="req">*</span></label>
+            <input type="email" name="email" class="form-control" placeholder="user@domain.com" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number <span class="req">*</span></label>
+            <input type="tel" name="phone" class="form-control" placeholder="10-digit mobile number (starts with 6-9)" pattern="[6-9][0-9]{9}" maxlength="10" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Date of Birth <span class="req">*</span></label>
+            <input type="date" name="dob" class="form-control" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Gender <span class="req">*</span></label>
+            <div style="display:flex; gap:1.25rem; margin-top:0.4rem;">
+              <label><input type="radio" name="gender" value="male" checked /> Male</label>
+              <label><input type="radio" name="gender" value="female" /> Female</label>
+              <label><input type="radio" name="gender" value="other" /> Other</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preferred Shopping Time</label>
+            <input type="time" name="prefTime" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">City &amp; State <span class="req">*</span></label>
+            <div style="display:flex; gap:0.5rem;">
+              <input type="text" name="city" class="form-control" placeholder="City" required />
+              <input type="text" name="state" class="form-control" placeholder="State" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Country</label>
+            <select name="country" class="form-control">
+              <option value="IN" selected>India 🇮🇳</option>
+              <option value="US">United States 🇺🇸</option>
+              <option value="UK">United Kingdom 🇬🇧</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label class="form-label">Full Address</label>
+            <input type="text" name="address" class="form-control" placeholder="Street, Door / Flat No., Area" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preferred Categories</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.35rem; font-size:0.85rem;">
+              <label><input type="checkbox" name="categories[]" value="Fresh Vegetables" checked /> 🥦 Fresh Vegetables</label>
+              <label><input type="checkbox" name="categories[]" value="Fresh Fruits" checked /> 🍎 Fresh Fruits</label>
+              <label><input type="checkbox" name="categories[]" value="Dairy & Breakfast" checked /> 🥛 Dairy &amp; Breakfast</label>
+              <label><input type="checkbox" name="categories[]" value="Daily Needs" /> 🧼 Daily Needs</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Monthly Grocery Budget</label>
+            <select name="budget" class="form-control">
+              <option value="0-1000">Under ₹1,000</option>
+              <option value="1000-2500" selected>₹1,000 - ₹2,500</option>
+              <option value="2500-5000">₹2,500 - ₹5,000</option>
+              <option value="5000+">Above ₹5,000</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Profile Image Upload</label>
+            <input type="file" name="profilePic" class="form-control" accept="image/jpeg,image/png,image/webp" />
+            <small style="color:var(--text-muted); font-size:0.75rem;">Max 5MB (JPG, PNG, WebP)</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password <span class="req">*</span></label>
+            <input type="password" name="password" class="form-control" placeholder="Min 6 characters" minlength="6" required />
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:1rem;">
+          <label class="form-label">Additional Notes / Delivery Instructions</label>
+          <textarea name="userNotes" class="form-control" rows="2" placeholder="e.g. Ring the doorbell, morning delivery"></textarea>
+        </div>
+
+        <div id="php-result-msg" class="mt-2 mb-2" style="display:none;"></div>
+
+        <div style="display:flex; gap:1rem; margin-top:1.5rem; flex-wrap:wrap;">
+          <button type="submit" class="btn btn-primary btn-lg" id="php-submit-btn">
+            <i class="fa fa-floppy-disk"></i> Submit to MySQL (phpMyAdmin)
+          </button>
+          <a href="records.php" class="btn btn-outline btn-lg">
+            <i class="fa fa-table"></i> View All Records →
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.getElementById('php-reg-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const btn = document.getElementById('php-submit-btn');
+    const msgBox = document.getElementById('php-result-msg');
+    const formData = new FormData(form);
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Saving to MySQL database...';
+    msgBox.style.display = 'none';
+
+    fetch('process.php', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(async res => {
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error((data && data.errors) ? data.errors.join('; ') : 'HTTP Server Error ' + res.status);
+      }
+      return data;
+    })
+    .then(data => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-floppy-disk"></i> Submit to MySQL (phpMyAdmin)';
+      msgBox.style.display = 'block';
+
+      if (data && data.success) {
+        msgBox.className = 'success-box';
+        msgBox.innerHTML = `
+          <div style="font-weight:700; font-size:1.05rem; margin-bottom:0.25rem;">
+            <i class="fa fa-circle-check"></i> Registration Saved to phpMyAdmin!
+          </div>
+          <div>${data.message} (Assigned User ID: <strong>#${data.userId}</strong>)</div>
+          <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="records.php" class="btn btn-primary btn-sm"><i class="fa fa-table"></i> View in Records Table</a>
+            <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> Check in phpMyAdmin ↗</a>
+          </div>
+        `;
+        form.reset();
+      } else {
+        msgBox.className = 'error-box';
+        msgBox.innerHTML = '<i class="fa fa-triangle-exclamation"></i> ' + (data && data.errors ? data.errors.join('; ') : 'Validation failed.');
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-floppy-disk"></i> Submit to MySQL (phpMyAdmin)';
+      msgBox.style.display = 'block';
+      msgBox.className = 'error-box';
+      msgBox.innerHTML = `
+        <div style="font-weight:700; margin-bottom:0.25rem;"><i class="fa fa-circle-xmark"></i> Submission Failed</div>
+        <div>${err.message || 'Could not communicate with PHP server.'}</div>
+        <div style="margin-top:0.5rem; font-size:0.8rem; color:#7f1d1d;">
+          Make sure Apache and MySQL are running in your XAMPP Control Panel and access this page via <code>http://localhost/FreshKart/php-module/index.html</code>.
+        </div>
+      `;
+    });
+  });
+</script>
+</body>
+</html>

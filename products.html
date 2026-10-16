@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Products — AI Personal Shopping Agent</title>
+  <meta name="description" content="Browse all products with advanced search, filtering and sorting." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">🛍️</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <div class="student-info">
+      <strong>Rahul Kanth S</strong>
+      <small>Roll No: 2303717620522015</small>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+      <button class="icon-btn" id="notifBtn"><i class="fa fa-bell"></i><span class="badge" id="notif-count">5</span></button>
+      <a href="cart.html" class="icon-btn"><i class="fa fa-shopping-cart"></i><span class="badge" id="cart-count">0</span></a>
+    </div>
+  </div>
+  <button class="hamburger" id="hamburger"><i class="fa fa-bars"></i></button>
+</header>
+<nav class="site-nav" id="site-nav">
+  <ul class="nav-list">
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="products.html" class="nav-link active">🛍️ Products</a></li>
+    <li><a href="ai-assistant.html" class="nav-link">🤖 AI Assistant</a></li>
+    <li><a href="wishlist.html" class="nav-link">❤️ Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">🛒 Cart</a></li>
+    <li><a href="compare.html" class="nav-link">⚖️ Compare</a></li>
+    <li><a href="orders.html" class="nav-link">📋 Orders</a></li>
+    <li><a href="seller-dashboard.html" class="nav-link">🏪 Seller</a></li>
+    <li><a href="admin-dashboard.html" class="nav-link">⚙️ Admin</a></li>
+  </ul>
+</nav>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="container">
+    <h2>🛍️ Product Catalog</h2>
+    <p style="color:var(--text-muted); margin-top:0.5rem;">Browse, search, and filter 50+ farm-fresh vegetables, seasonal fruits, morning dairy, and daily essentials</p>
+    <div class="search-wrap mt-3" style="max-width:700px;">
+      <span class="search-icon"><i class="fa fa-search"></i></span>
+      <input type="text" id="product-search" placeholder="Search fresh vegetables, fruits, dairy, daily needs... (Ctrl+K)" aria-label="Search products" />
+      <button class="search-btn">Search</button>
+    </div>
+  </div>
+</div>
+
+<main class="section">
+  <div class="container">
+
+    <!-- jQuery Category Filter Bar -->
+    <div style="margin-bottom:1.5rem;">
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;" id="cat-filter-bar">
+        <button class="jq-filter-btn btn btn-sm btn-primary active" data-category="all">All</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Fresh Vegetables">🥦 Fresh Vegetables</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Fresh Fruits">🍎 Fresh Fruits</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Dairy & Breakfast">🥛 Dairy &amp; Breakfast</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Staples & Grains">🌾 Staples &amp; Grains</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Snacks & Beverages">🍪 Snacks &amp; Drinks</button>
+        <button class="jq-filter-btn btn btn-sm btn-outline" data-category="Daily Needs">🧼 Daily Needs</button>
+      </div>
+      <div id="jquery-filter-result" style="font-size:0.85rem; color:var(--primary); font-weight:600;"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:260px 1fr; gap:2rem; align-items:start;">
+
+      <!-- Filter Sidebar -->
+      <aside class="filter-sidebar" style="position:sticky; top:150px;">
+        <div class="filter-group">
+          <div class="filter-title">Sort By</div>
+          <select id="sort-select" class="form-control" aria-label="Sort products">
+            <option value="">Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="reviews">Most Reviewed</option>
+            <option value="discount">Best Discount</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-title">Price Range</div>
+          <div class="range-wrap">
+            <input type="range" id="price-range" min="20" max="2000" value="2000" step="20" aria-label="Maximum price" />
+            <span class="range-val">Up to: <span id="price-range-val">₹2,000</span></span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-title">Category</div>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Fresh Vegetables" /> 🥦 Fresh Vegetables</label>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Fresh Fruits" /> 🍎 Fresh Fruits</label>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Dairy & Breakfast" /> 🥛 Dairy &amp; Breakfast</label>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Staples & Grains" /> 🌾 Staples &amp; Grains</label>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Snacks & Beverages" /> 🍪 Snacks &amp; Drinks</label>
+          <label class="filter-option"><input type="checkbox" class="filter-cat" value="Daily Needs" /> 🧼 Daily Needs &amp; Cleaning</label>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-title">Brand</div>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="FreshFarm" /> FreshFarm</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Country Fresh" /> Country Fresh</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Amul" /> Amul</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Mother Dairy" /> Mother Dairy</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Aashirvaad" /> Aashirvaad</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Daawat" /> Daawat</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Tata" /> Tata</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Tata Sampann" /> Tata Sampann</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Fortune" /> Fortune</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Figaro Organic" /> Figaro Organic</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Surf Excel" /> Surf Excel</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Vim" /> Vim</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Dettol" /> Dettol</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Colgate" /> Colgate</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Lizol" /> Lizol</label>
+          <label class="filter-option"><input type="checkbox" class="filter-brand jq-brand-cb" value="Harpic" /> Harpic</label>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-title">Min Rating</div>
+          <select id="filter-rating" class="form-control" aria-label="Minimum rating">
+            <option value="0">All Ratings</option>
+            <option value="4">4★ &amp; Above</option>
+            <option value="4.5">4.5★ &amp; Above</option>
+            <option value="4.8">4.8★ &amp; Above</option>
+          </select>
+        </div>
+
+        <!-- jQuery Price Range for jQuery-ops demo -->
+        <div class="filter-group" style="border-top:1px solid var(--border); padding-top:1rem;">
+          <div class="filter-title">jQuery Price Filter</div>
+          <div class="range-wrap">
+            <input type="range" id="jq-price-max" min="20" max="2000" value="2000" step="20" />
+            <span class="range-val">Max: <span id="jq-price-label">₹2,000</span></span>
+          </div>
+        </div>
+
+        <button class="btn btn-outline btn-block mt-2" id="clear-filters">✕ Clear Filters</button>
+      </aside>
+
+      <!-- Product Grid & Drop Zones -->
+      <div>
+        <!-- Smart Drag & Drop Dock -->
+        <div style="background:var(--gradient-card); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.25rem; margin-bottom:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span style="font-size:1.2rem;">✋</span>
+              <strong style="font-size:0.9rem; color:var(--text-strong);">Smart Drag &amp; Drop Dock</strong>
+              <span class="tag tag-primary" style="font-size:0.7rem;">Interactive</span>
+            </div>
+            <small style="color:var(--text-muted); font-size:0.78rem;">Grab and drag any product card directly into these drop targets:</small>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;" id="drop-zones">
+            <div class="drop-zone" id="drop-cart" data-action="cart" style="padding:1rem; min-height:85px; font-size:0.85rem;">
+              <span style="font-size:1.5rem;">🛒</span>
+              <strong>Drop to Cart</strong>
+              <small style="font-size:0.72rem;">Add to order</small>
+              <div id="drop-cart-list" style="width:100%;margin-top:0.4rem;"></div>
+            </div>
+            <div class="drop-zone" id="drop-wishlist" data-action="wishlist" style="padding:1rem; min-height:85px; font-size:0.85rem;">
+              <span style="font-size:1.5rem;">❤️</span>
+              <strong>Drop to Wishlist</strong>
+              <small style="font-size:0.72rem;">Save for later</small>
+              <div id="drop-wishlist-list" style="width:100%;margin-top:0.4rem;"></div>
+            </div>
+            <div class="drop-zone" id="drop-compare" data-action="compare" style="padding:1rem; min-height:85px; font-size:0.85rem;">
+              <span style="font-size:1.5rem;">⚖️</span>
+              <strong>Drop to Compare</strong>
+              <small style="font-size:0.72rem;">Side-by-side matrix</small>
+              <div id="drop-compare-list" style="width:100%;margin-top:0.4rem;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="products-info" style="font-size:0.85rem; color:var(--primary); font-weight:600; margin-bottom:1rem;"></div>
+        <div class="product-grid" id="product-grid"></div>
+      </div>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div id="recommendations" class="mt-4" style="padding-top:2rem; border-top:1px solid var(--border);">
+      <div class="section-header">
+        <div><h2 class="section-title">AI Recommendations</h2><p class="section-sub">Personalized picks based on trending behavior</p></div>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="trending">🔥 Trending</button>
+        <button class="tab-btn" data-tab="budget">💰 Best Budget</button>
+        <button class="tab-btn" data-tab="new">🆕 New Arrivals</button>
+        <button class="tab-btn" data-tab="toprated">⭐ Top Rated</button>
+      </div>
+      <div class="tab-panel active" id="tab-trending"><div class="product-grid stagger" id="rec-trending"></div></div>
+      <div class="tab-panel" id="tab-budget"><div class="product-grid stagger" id="rec-budget"></div></div>
+      <div class="tab-panel" id="tab-new"><div class="product-grid stagger" id="rec-new"></div></div>
+      <div class="tab-panel" id="tab-toprated"><div class="product-grid stagger" id="rec-toprated"></div></div>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<button class="fixed-chat-btn" onclick="window.location='ai-assistant.html'">🤖</button>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/jquery-ops.js"></script>
+<script src="js/drag-drop.js"></script>
+<script>
+  // Price range display
+  const pr = document.getElementById('price-range');
+  const prVal = document.getElementById('price-range-val');
+  if (pr && prVal) { pr.addEventListener('input', () => { prVal.textContent = '₹' + parseInt(pr.value).toLocaleString('en-IN'); window.applyFilters?.(); }); }
+  // Clear filters
+  document.getElementById('clear-filters')?.addEventListener('click', () => {
+    document.querySelectorAll('.filter-cat, .filter-brand').forEach(el => el.checked = false);
+    if (pr) { pr.value = 2000; prVal.textContent = '₹2,000'; }
+    const jqPr = document.getElementById('jq-price-max'); const jqLabel = document.getElementById('jq-price-label');
+    if (jqPr) { jqPr.value = 2000; if (jqLabel) jqLabel.textContent = '₹2,000'; $('.product-card').css('opacity', '1'); }
+    const fs = document.getElementById('filter-rating'); if (fs) fs.value = '0';
+    const ss = document.getElementById('sort-select'); if (ss) ss.value = '';
+    const search = document.getElementById('product-search'); if (search) search.value = '';
+    window.applyFilters?.();
+  });
+</script>
+</body>
+</html>
+

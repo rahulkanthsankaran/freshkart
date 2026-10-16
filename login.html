@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — AI Personal Shopping Agent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="site-header" id="site-header">
+  <div class="header-left">
+    <div class="logo-icon">???</div>
+    <div class="logo-text"><h1>FreshKart</h1><span>Your Intelligent Shopping Agent</span></div>
+  </div>
+  <div class="header-right">
+    <button class="icon-btn theme-toggle" id="themeToggle"><i class="fa fa-moon" id="theme-icon"></i></button>
+    <a href="register.html" class="btn btn-outline btn-sm">Register</a>
+  </div>
+</header>
+
+<main class="section" style="min-height:calc(100vh - 140px); display:flex; align-items:center; justify-content:center;">
+  <div class="container" style="max-width:440px;">
+    <div class="card animate-zoom">
+      <div class="text-center mb-3">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">??</div>
+        <h2 class="section-title">Welcome Back</h2>
+        <p>Log in to access your personal shopping assistant & saved items.</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address <span class="req">*</span></label>
+          <input type="email" id="login-email" class="form-control" placeholder="you@example.com" required />
+          <span class="error-msg" id="login-email-err"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password <span class="req">*</span></label>
+          <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required />
+          <span class="error-msg" id="login-password-err"></span>
+        </div>
+
+        <div class="form-group" style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
+          <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+            <input type="checkbox" id="remember-me" checked /> Remember Me
+          </label>
+          <a href="#" style="color:var(--primary); font-weight:500;">Forgot Password?</a>
+        </div>
+
+        <div id="login-msg" class="mb-2" style="display:none; font-size:0.85rem;"></div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-btn">Sign In</button>
+
+        <div class="divider"></div>
+
+        <div style="text-align:center; font-size:0.85rem;">
+          <span>Quick Demo Roles:</span>
+          <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:0.5rem;">
+            <button type="button" class="btn btn-sm btn-outline" id="demo-customer">Customer</button>
+            <button type="button" class="btn btn-sm btn-outline" id="demo-seller">Seller</button>
+            <button type="button" class="btn btn-sm btn-outline" id="demo-admin">Admin</button>
+          </div>
+        </div>
+
+        <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:var(--text-muted);">
+          Don't have an account? <a href="register.html" style="color:var(--primary); font-weight:600;">Sign up now</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const loginForm = document.getElementById('login-form');
+  const emailInp = document.getElementById('login-email');
+  const passInp = document.getElementById('login-password');
+  const msgEl = document.getElementById('login-msg');
+
+  document.getElementById('demo-customer').addEventListener('click', () => {
+    emailInp.value = 'customer@FreshKart.com';
+    passInp.value = 'Password@123';
+  });
+  document.getElementById('demo-seller').addEventListener('click', () => {
+    emailInp.value = 'seller@FreshKart.com';
+    passInp.value = 'Seller@123';
+  });
+  document.getElementById('demo-admin').addEventListener('click', () => {
+    emailInp.value = 'admin@FreshKart.com';
+    passInp.value = 'Admin@123';
+  });
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = emailInp.value.trim();
+    const pass = passInp.value.trim();
+
+    if (!email || !pass) {
+      msgEl.className = 'error-msg show';
+      msgEl.textContent = 'Please fill in both email and password.';
+      return;
+    }
+
+    msgEl.className = 'success-msg show';
+    msgEl.textContent = 'Login successful! Redirecting...';
+    sessionStorage.setItem('FreshKart-user', JSON.stringify({ email, name: email.split('@')[0] }));
+    window.showToast && showToast('Welcome back!', 'success');
+
+    setTimeout(() => {
+      if (email.includes('admin')) window.location = 'admin-dashboard.html';
+      else if (email.includes('seller')) window.location = 'seller-dashboard.html';
+      else window.location = 'index.html';
+    }, 1000);
+  });
+</script>
+</body>
+</html>
+
+
