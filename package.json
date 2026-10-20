@@ -1,0 +1,27 @@
+{
+  "name": "freshkart",
+  "version": "1.0.0",
+  "description": "FreshKart — Full-Stack E-Commerce & AI Personal Shopping Assistant Platform",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node serve.js",
+    "dev": "node serve.js",
+    "server": "node backend/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "freshkart",
+    "ecommerce",
+    "shopping-agent",
+    "fullstack",
+    "vercel"
+  ],
+  "author": "FreshKart Team",
+  "license": "MIT"
+}

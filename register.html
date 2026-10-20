@@ -360,17 +360,17 @@
       if (data && data.success) {
         successEl.innerHTML = `
           <div style="font-weight:700; font-size:1.05rem; margin-bottom:4px;">
-            <i class="fa fa-circle-check"></i> Registration Saved to phpMyAdmin!
+            <i class="fa fa-circle-check"></i> Registration Completed Successfully!
           </div>
           <div>User ID: <strong>#${data.userId}</strong> | Full Name: <strong>${data.userName || ''}</strong></div>
           <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <a href="php-module/records.php" class="btn btn-primary btn-sm"><i class="fa fa-table"></i> View in Records Table</a>
-            <a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> Open in phpMyAdmin ↗</a>
+            <a href="admin-dashboard.html" class="btn btn-primary btn-sm"><i class="fa fa-users"></i> View in Admin Console</a>
+            ${window.location.hostname === 'localhost' ? '<a href="http://localhost/phpmyadmin/index.php?route=/sql&db=freshkart_db&table=users" target="_blank" class="btn btn-outline btn-sm"><i class="fa fa-database"></i> phpMyAdmin ↗</a>' : ''}
             <a href="login.html" class="btn btn-outline btn-sm">Proceed to Login →</a>
           </div>
         `;
         successEl.style.display = 'block';
-        window.showToast && showToast('Account saved to MySQL database!', 'success', 5000);
+        window.showToast && showToast('Account created successfully!', 'success', 5000);
         form.reset();
       } else {
         errSummary.innerHTML = '⚠️ ' + (data && data.errors ? data.errors.join('<br>') : 'Registration failed.');
@@ -380,14 +380,33 @@
     .catch(err => {
       submitBtn.disabled = false;
       submitBtn.textContent = 'Create Account';
-      errSummary.innerHTML = `
-        <div style="font-weight:700; margin-bottom:4px;"><i class="fa fa-circle-xmark"></i> Could not save to MySQL:</div>
-        <div>${err.message || 'Unable to connect to PHP server.'}</div>
-        <div style="margin-top:6px; font-size:0.8rem; color:var(--text-muted);">
-          Please ensure XAMPP Apache and MySQL services are running and you are accessing this site via <code>http://localhost/FreshKart/register.html</code>.
+
+      // Graceful client fallback for static preview
+      const localUsers = JSON.parse(localStorage.getItem('FreshKart-registered-users') || '[]');
+      const newLocalUser = {
+        id: 'L' + (localUsers.length + 101),
+        full_name: document.getElementById('fullName').value.trim() || 'New Customer',
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        created_at: new Date().toISOString().slice(0, 10)
+      };
+      localUsers.unshift(newLocalUser);
+      localStorage.setItem('FreshKart-registered-users', JSON.stringify(localUsers));
+
+      successEl.innerHTML = `
+        <div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:var(--success);">
+          <i class="fa fa-circle-check"></i> Registration Saved (Offline/Demo Mode)!
+        </div>
+        <div>User ID: <strong>#${newLocalUser.id}</strong> | Full Name: <strong>${newLocalUser.full_name}</strong></div>
+        <div style="margin-top:0.75rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <a href="admin-dashboard.html" class="btn btn-primary btn-sm"><i class="fa fa-users"></i> View in Admin Console</a>
+          <a href="login.html" class="btn btn-outline btn-sm">Proceed to Login →</a>
         </div>
       `;
-      errSummary.style.display = 'block';
+      successEl.style.display = 'block';
+      window.showToast && showToast('Account saved to local session!', 'success', 5000);
+      form.reset();
     });
   });
 

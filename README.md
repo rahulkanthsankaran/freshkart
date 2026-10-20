@@ -74,21 +74,56 @@ FullStack_CAT2/
 
 ---
 
+## ⚡ Deployment to Vercel
+
+This repository is **100% pre-configured and deployment-ready for Vercel**!
+
+### Option A: Deploy via Vercel Web Dashboard (Recommended)
+1. Push this project to your GitHub, GitLab, or Bitbucket account.
+2. Go to [vercel.com](https://vercel.com) and click **"Add New..." > "Project"**.
+3. Import your `FreshKart` repository.
+4. Leave all settings at default (**Framework Preset: Other**, Root Directory: `./`).
+5. Click **"Deploy"**.
+6. Your live site will be ready at `https://<your-project>.vercel.app` in seconds!
+
+### Option B: Deploy via Vercel CLI
+```bash
+# 1. Install Vercel CLI globally (if not installed)
+npm install -g vercel
+
+# 2. Login to your Vercel account
+vercel login
+
+# 3. Deploy to production
+vercel --prod
+```
+
+### 🛠️ Vercel Architecture Details
+- **`vercel.json`**: Configures clean URLs, automatic API rewrites, asset caching, CORS, and security headers.
+- **Serverless API (`api/index.js`)**: All dynamic endpoints (`/api/products`, `/api/health`, `/api/orders`, `/api/ai/chat`, `/api/register`, `/api/records`, `/api/analyze-url`) execute as ultra-fast Vercel Serverless Functions.
+- **Static Assets**: HTML, CSS, JavaScript, and JSON datasets are served globally via Vercel's global CDN Edge Network.
+- **PHP Compatibility Layer**: Requests to legacy PHP endpoints (`/php-module/process.php`, `/php-module/records.php`, `/php-module/analyze-url.php`) automatically map to the Node.js serverless functions, preserving full fullstack functionality in serverless cloud hosting!
+
+---
+
 ## 💻 How to Run Locally
 
 ### 1. Frontend Quick Launch
-Simply double click `index.html` or open any `.html` file directly in any modern browser. All features (storage, cart, search, AI simulator) function seamlessly client-side!
-
-### 2. Node.js REST API Server
+Simply double click `index.html` or run:
 ```bash
-cd backend
-npm install
 npm start
 ```
-Server runs at `http://localhost:5000`.
+Server runs at `http://localhost:3000`.
 
-### 3. PHP / MySQL Module
+### 2. Full-Stack Node.js REST API Server
+```bash
+npm run server
+```
+Server runs at `http://localhost:5000` with live REST endpoints.
+
+### 3. PHP / MySQL Module (Optional XAMPP)
 1. Place the repository in your web server root (e.g. `xampp/htdocs/FullStack_CAT2/`).
 2. Import `php-module/schema.sql` into phpMyAdmin / MySQL.
 3. Access `http://localhost/FullStack_CAT2/php-module/index.html`.
+
 

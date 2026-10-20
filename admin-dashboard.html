@@ -202,31 +202,42 @@
     });
   });
 
-  // Fetch live users from MySQL phpMyAdmin records
+  // Render user row helper
+  function renderUserRow(u, tagLabel) {
+    return `
+      <tr style="border-bottom:1px solid var(--border); background:rgba(34,197,94,0.04);">
+        <td style="padding:0.75rem 0.5rem;">
+          <strong>${u.full_name}</strong>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${u.email || ''}</div>
+        </td>
+        <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">${tagLabel || '#' + u.id}</span></td>
+        <td style="padding:0.75rem 0.5rem;">${u.created_at ? u.created_at.split(' ')[0] : 'Recent'}</td>
+        <td style="padding:0.75rem 0.5rem;">${u.city || '-'}, ${u.state || ''}</td>
+        <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Live</span></td>
+        <td style="padding:0.75rem 0.5rem;"><span class="btn btn-outline btn-sm" style="cursor:default;">Active</span></td>
+      </tr>
+    `;
+  }
+
+  // Fetch live users from API / PHP records
   fetch('php-module/records.php?format=json')
     .then(r => r.json())
     .then(d => {
-      if (d && d.success && d.records && d.records.length > 0) {
-        const tbody = document.getElementById('admin-user-table');
-        if (tbody) {
-          const liveRows = d.records.map(u => `
-            <tr style="border-bottom:1px solid var(--border); background:rgba(34,197,94,0.04);">
-              <td style="padding:0.75rem 0.5rem;">
-                <strong>${u.full_name}</strong>
-                <div style="font-size:0.75rem; color:var(--text-muted);">${u.email}</div>
-              </td>
-              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">MySQL #${u.id}</span></td>
-              <td style="padding:0.75rem 0.5rem;">${u.created_at ? u.created_at.split(' ')[0] : 'Recent'}</td>
-              <td style="padding:0.75rem 0.5rem;">${u.city || '-'}, ${u.state || ''}</td>
-              <td style="padding:0.75rem 0.5rem;"><span class="tag tag-success">Live</span></td>
-              <td style="padding:0.75rem 0.5rem;"><a href="php-module/records.php" class="btn btn-outline btn-sm">Inspect</a></td>
-            </tr>
-          `).join('');
-          tbody.innerHTML = liveRows + tbody.innerHTML;
-        }
+      const tbody = document.getElementById('admin-user-table');
+      if (tbody && d && d.success && d.records && d.records.length > 0) {
+        const liveRows = d.records.map(u => renderUserRow(u, `User #${u.id}`)).join('');
+        tbody.innerHTML = liveRows + tbody.innerHTML;
       }
     })
-    .catch(() => {});
+    .catch(() => {
+      // Fallback: check localStorage for offline / client registrations
+      const localUsers = JSON.parse(localStorage.getItem('FreshKart-registered-users') || '[]');
+      const tbody = document.getElementById('admin-user-table');
+      if (tbody && localUsers.length > 0) {
+        const localRows = localUsers.map(u => renderUserRow(u, 'Local')).join('');
+        tbody.innerHTML = localRows + tbody.innerHTML;
+      }
+    });
 </script>
 </body>
 </html>
