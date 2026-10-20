@@ -1,8 +1,8 @@
 {
   "name": "freshkart",
   "version": "1.0.0",
+  "private": true,
   "description": "FreshKart — Full-Stack E-Commerce & AI Personal Shopping Assistant Platform",
-  "main": "api/index.js",
   "scripts": {
     "start": "node serve.js",
     "dev": "node serve.js",
@@ -13,7 +13,7 @@
     "express": "^4.19.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "keywords": [
     "freshkart",

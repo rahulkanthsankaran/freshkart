@@ -453,7 +453,41 @@ const handleAnalyzeUrl = async (req, res) => {
 app.get(['/api/analyze-url', '/php-module/analyze-url.php'], handleAnalyzeUrl);
 app.post(['/api/analyze-url', '/php-module/analyze-url.php'], handleAnalyzeUrl);
 
-/* ────────── 8. ROOT ROUTE ────────── */
+/* ────────── 8. ROOT & STATIC PAGE ROUTES (Prevents "Cannot GET /") ────────── */
+// Serve static frontend assets if requests are routed to Express
+app.use(express.static(process.cwd()));
+app.use(express.static(path.join(__dirname, '..')));
+
+// Explicit handler for homepage / and index.html
+app.get(['/', '/index.html'], (req, res) => {
+  const rootIndex = path.join(process.cwd(), 'index.html');
+  if (fs.existsSync(rootIndex)) {
+    return res.sendFile(rootIndex);
+  }
+  const parentIndex = path.join(__dirname, '..', 'index.html');
+  if (fs.existsSync(parentIndex)) {
+    return res.sendFile(parentIndex);
+  }
+  res.sendFile(path.resolve('index.html'));
+});
+
+// Explicit handler for HTML pages (e.g., /products, /cart, /checkout)
+app.get('/:page', (req, res, next) => {
+  const page = req.params.page;
+  if (!page || page.startsWith('api')) return next();
+  const htmlFile = page.endsWith('.html') ? page : `${page}.html`;
+  const rootPath = path.join(process.cwd(), htmlFile);
+  if (fs.existsSync(rootPath)) {
+    return res.sendFile(rootPath);
+  }
+  const parentPath = path.join(__dirname, '..', htmlFile);
+  if (fs.existsSync(parentPath)) {
+    return res.sendFile(parentPath);
+  }
+  next();
+});
+
+// API Root info
 app.get('/api', (req, res) => {
   res.json({
     name: 'FreshKart REST API',
